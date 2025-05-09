@@ -2,3 +2,6 @@
 init.sql
 docker-compose.yaml
 .env
+chatbot-api/logs/
+*.log
+airflow/logs/

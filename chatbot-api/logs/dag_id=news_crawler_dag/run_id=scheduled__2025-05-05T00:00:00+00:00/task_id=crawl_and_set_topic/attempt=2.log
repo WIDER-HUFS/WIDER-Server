@@ -1,0 +1,68 @@
+[2025-05-09T05:42:08.804+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: news_crawler_dag.crawl_and_set_topic scheduled__2025-05-05T00:00:00+00:00 [queued]>
+[2025-05-09T05:42:08.808+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: news_crawler_dag.crawl_and_set_topic scheduled__2025-05-05T00:00:00+00:00 [queued]>
+[2025-05-09T05:42:08.808+0000] {taskinstance.py:1359} INFO - Starting attempt 2 of 2
+[2025-05-09T05:42:08.817+0000] {taskinstance.py:1380} INFO - Executing <Task(PythonOperator): crawl_and_set_topic> on 2025-05-05 00:00:00+00:00
+[2025-05-09T05:42:08.820+0000] {standard_task_runner.py:57} INFO - Started process 155 to run task
+[2025-05-09T05:42:08.822+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'news_crawler_dag', 'crawl_and_set_topic', 'scheduled__2025-05-05T00:00:00+00:00', '--job-id', '16', '--raw', '--subdir', 'DAGS_FOLDER/news_crawler_dag.py', '--cfg-path', '/tmp/tmp8_wjvgpr']
+[2025-05-09T05:42:08.824+0000] {standard_task_runner.py:85} INFO - Job 16: Subtask crawl_and_set_topic
+[2025-05-09T05:42:08.844+0000] {task_command.py:415} INFO - Running <TaskInstance: news_crawler_dag.crawl_and_set_topic scheduled__2025-05-05T00:00:00+00:00 [running]> on host e353fff685ad
+[2025-05-09T05:42:08.873+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='news_crawler_dag' AIRFLOW_CTX_TASK_ID='crawl_and_set_topic' AIRFLOW_CTX_EXECUTION_DATE='2025-05-05T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='2' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-05-05T00:00:00+00:00'
+[2025-05-09T05:42:08.874+0000] {logging_mixin.py:151} INFO - 오늘의 카테고리: 정치
+[2025-05-09T05:42:09.022+0000] {logging_mixin.py:151} INFO - 헤드라인 기사 10개 수집됨
+[2025-05-09T05:42:09.120+0000] {logging_mixin.py:151} INFO - 
+[선택된 뉴스 기사]
+[2025-05-09T05:42:09.120+0000] {logging_mixin.py:151} INFO - 제목: '탈당' 김상욱 "국힘은 정당 기능 상실… 민주당 거부할 이유 없어"
+[2025-05-09T05:42:09.120+0000] {logging_mixin.py:151} INFO - 링크: https://n.news.naver.com/mnews/article/469/0000863791
+[2025-05-09T05:42:09.120+0000] {logging_mixin.py:151} INFO - [본문 내용]
+[2025-05-09T05:42:09.120+0000] {logging_mixin.py:151} INFO - 국힘 경선·한덕수 단일화 과정 비판
+"원칙 없이 코미디 프로처럼 진행"
+김상욱 의원이 8일 서울 동작구 현충원에서 참배 후 국민의힘 탈당에 관한 입장을 밝히고 있다. 연합뉴스
+국민의힘을 탈당한 김상욱 의원이 "국민의힘은 이미 정당으로서의 기능을 잃어버렸다"고 작심 비판했다. 민생에 대한 고민 없이 기득권 유지에 급급한 정당으로 전락했다는 게 이유였다. 반면에 더불어민주당에 대해선 "보수의 가치에 충실하다"고 호평하며 입당 가능성을 시사했다.
+김 의원은 9일 MBC라디오 '김종배의 시선집중'에 출연해 전날 국민의힘을 떠나게 된 배경을 이같이 설명했다. 탈당과 동시에 무소속 신분이 된 그는 "오갈 데 없는 잡초 같은 야인이 됐다"며 "어떻게든 국민의힘을 국민이 사랑하는 당으로 만들어 보고 싶었지만 내가 부족해서 바꾸지 못했다"고 말했다. 김 의원은 12·3 불법 계엄을 비판하고, 윤석열 전 대통령 탄핵에도 찬성하면서 최근까지 당과 마찰을 빚어 왔다.
+연관기사
+• 김상욱, 국민의힘 탈당… "이재명·이준석 만나고 싶다"
+(www.hankookilbo.com/News/Read/A2025050809590002510)
+국민의힘이 퇴보하는 근본적 원인으로는 '정치 철학 부재'를 꼽았다. 김 의원은 "보수의 가치가 무엇인지를 정확하게 알고 그것을 판단 기준으로 삼아야 하는데, 지금 국민의힘은 '무엇이 더 이득인가'를 기준으로 움직이고 있다"고 단언했다. 소속 의원들이 당의 쇄신 필요성보다는 공천을 받는 일에 최우선 목표를 두고 있다는 얘기였다. 이런 현실을 두고 그는 "당원들과 보수 지지층은 국회의원을 하기 위한 도구에 불과한가"라고 반문하며 일침을 가했다.
+국민의힘 대선 후보 경선, 무소속 대선 출마 선언을 한 한덕수 전 국무총리와의 후보 단일화 과정 역시 '원칙 없는 정치'의 대표 사례로 지목했다. 김 의원은 "답을 정해 놓고 마치 코미디 프로그램처럼 경선을 진행했다"며 "대선에 중요한 국가 비전과 정책, 방향성에 대한 얘기는 하나도 없었다"고 일갈했다. 단일화에 미온적인 김문수 국민의힘 대선 후보를 당 지도부가 압박하는 상황을 두고도 "당원과 당헌·당규를 무시하는 것"이라며 "도대체 경선을 왜 한 것인지 모르겠다"고 지적했다.
+이재명 더불어민주당 대선 후보가 8일 서울 여의도 중소기업중앙회에서 열린 '진짜 대한민국 선거대책위원회' 직능본부 민생정책 협약식에 참석해 발언하고 있다. 연합뉴스
+반대로 민주당과 관련해선 우호적 태도를 보였다. 김 의원은 "객관적으로 프레임을 걷어내고 본질만 놓고 봤을 때는 민주당이 더 '보수당'의 역할을 하고 있다"면서 "민주당을 거부할 이유는 없는 상태가 돼 버렸다"고 밝혔다. 전날 탈당 선언 직후 그가 "이재명 민주당 대선 후보와 만나고 싶다"고 요청하자, 이 후보도 "구국 충정을 가진 어떤 분이라도 최대한 만나 함께하겠다"고 화답한 상태다.
+김 의원은 보수 텃밭으로 분류되는 울산 지역구(남구갑)에서 정치 생활을 이어가겠다는 의지도 내비쳤다. 그는 "(국민의힘 탈당은) 재선에는 분명히 큰 마이너스"라면서도 "남구 시민들을 위해 할 수 있는 역할을 다해야 한다"고 말했다.
+[2025-05-09T05:42:09.227+0000] {logging_mixin.py:151} INFO - 
+[추가 기사]
+[2025-05-09T05:42:09.227+0000] {logging_mixin.py:151} INFO - 제목: '탈당' 김상욱 "국힘은 정당 기능 상실… 민주당 거부할 이유 없어"
+[2025-05-09T05:42:09.228+0000] {logging_mixin.py:151} INFO - 링크: https://n.news.naver.com/mnews/article/469/0000863791
+[2025-05-09T05:42:11.688+0000] {logging_mixin.py:151} INFO - 
+[추가 기사]
+[2025-05-09T05:42:11.688+0000] {logging_mixin.py:151} INFO - 제목: 국힘 지도부 "11일 후 단일화 명분·실리 없어…金 대승적 결단"
+[2025-05-09T05:42:11.688+0000] {logging_mixin.py:151} INFO - 링크: https://n.news.naver.com/mnews/article/018/0006008750
+[2025-05-09T05:42:14.317+0000] {logging_mixin.py:151} INFO - 추출된 주제: {'topic': '대선 후보 단일화', 'topic_prompt': '대선 후보들 간의 단일화가 왜 중요한가요? 단일화 시점에 따라 선거 결과에 어떤 영향을 미칠 수 있을까요?'}
+[2025-05-09T05:42:14.317+0000] {logging_mixin.py:151} INFO - {'topic': '대선 후보 단일화', 'topic_prompt': '대선 후보들 간의 단일화가 왜 중요한가요? 단일화 시점에 따라 선거 결과에 어떤 영향을 미칠 수 있을까요?'}
+[2025-05-09T05:42:24.327+0000] {logging_mixin.py:151} INFO - Error in set_daily_topic: (2003, "Can't connect to MySQL server on 'hufs-wider.cpwc08i2mniz.ap-northeast-2.rds.amazonaws.com' (timed out)")
+[2025-05-09T05:42:24.329+0000] {taskinstance.py:1935} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/pymysql/connections.py", line 644, in connect
+    sock = socket.create_connection(
+  File "/usr/local/lib/python3.8/socket.py", line 808, in create_connection
+    raise err
+  File "/usr/local/lib/python3.8/socket.py", line 796, in create_connection
+    sock.connect(sa)
+socket.timeout: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 192, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 209, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/news_crawler_dag.py", line 41, in set_daily_topic
+    conn = pymysql.connect(
+  File "/home/airflow/.local/lib/python3.8/site-packages/pymysql/connections.py", line 358, in __init__
+    self.connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/pymysql/connections.py", line 711, in connect
+    raise exc
+pymysql.err.OperationalError: (2003, "Can't connect to MySQL server on 'hufs-wider.cpwc08i2mniz.ap-northeast-2.rds.amazonaws.com' (timed out)")
+[2025-05-09T05:42:24.339+0000] {taskinstance.py:1398} INFO - Marking task as FAILED. dag_id=news_crawler_dag, task_id=crawl_and_set_topic, execution_date=20250505T000000, start_date=20250509T054208, end_date=20250509T054224
+[2025-05-09T05:42:24.348+0000] {standard_task_runner.py:104} ERROR - Failed to execute job 16 for task crawl_and_set_topic ((2003, "Can't connect to MySQL server on 'hufs-wider.cpwc08i2mniz.ap-northeast-2.rds.amazonaws.com' (timed out)"); 155)
+[2025-05-09T05:42:24.382+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 1
+[2025-05-09T05:42:24.396+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check

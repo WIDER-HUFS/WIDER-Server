@@ -1,6 +1,6 @@
 package ac.kr.hufs.wider.model.DTO;
 
-import java.time.LocalDateTime;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponseDTO {
+public class EndChatResponseDTO {
     @JsonProperty("session_id")
     private String sessionId;
-    @JsonProperty("topic")
-    private String topic;
-    @JsonProperty("current_level")
-    private int currentLevel;
-    @JsonProperty("question")
-    private String question;
+    @JsonProperty("summary")
+    private Map<String, Object> summary;
+    @JsonProperty("feedback")
+    private String feedback;
+    @JsonProperty("message")
+    private String message;
 }

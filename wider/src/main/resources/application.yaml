@@ -42,13 +42,11 @@ spring:
         driver-class-name: com.mysql.cj.jdbc.Driver
     # jpa 설정 
     jpa:
-        hibernate:
-            ddl-auto: update
-            transaction:
-                jta:
-                    platform: org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform
         properties:
             hibernate:
+                transaction:
+                        jta:
+                            platform: org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform
                 show_sql: true
                 format_sql: true
                 dialect:
@@ -85,4 +83,11 @@ spring:
 jwt:
   secret: yourSecretKeyShouldBeLongAndSecureAndStoredInEnvironmentVariables
   expiration: 86400000 # 24시간
+    
+logging:
+    level:
+        root: INFO
+        ac.kr.hufs.wider: DEBUG
+        org.springframework.web: DEBUG
+        org.springframework.web.client.RestTemplate: DEBUG
     

@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignInDTO {
-    @JsonProperty("user_id")
-    private String userId;
-    @JsonProperty("password")
-    private String password;
-}   
+public class EndChatRequestDTO {
+    @JsonProperty("session_id")
+    private String sessionId;
+}

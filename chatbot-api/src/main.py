@@ -11,8 +11,15 @@ import uuid
 import json
 from datetime import date
 import jwt
-from typing import Optional
-from . import crawler
+from typing import Optional, Dict, Any
+import logging
+
+# 로그 설정
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 # 환경 설정
 load_dotenv()
@@ -144,27 +151,6 @@ def get_daily_topic() -> dict:
             return row
         return None
 
-def set_daily_topic():
-    topic_json = crawler.main()
-    topic = topic_json["topic"]
-    topic_prompt = topic_json["topic_prompt"]
-    today = str(date.today())
-    with get_db() as conn:
-        cursor = conn.cursor()
-        cursor.execute(
-            """
-            INSERT INTO daily_topic (topic_date, topic, topic_prompt)
-            VALUES (%s, %s, %s)
-            ON DUPLICATE KEY UPDATE
-            topic = VALUES(topic),
-            topic_prompt = VALUES(topic_prompt)
-            """,
-            (today, topic, topic_prompt)
-        )
-        conn.commit()
-    question = question_chain.invoke({"topic": topic, "bloom_level": 1}).content
-    return {"topic": topic, "topic_prompt": topic_prompt, "bloom1_question": question}
-
 # LLM 설정
 llm1 = ChatOpenAI(model="gpt-4o-mini", openai_api_key=openai_api_key)
 llm2 = ChatOpenAI(model="gpt-4o-mini", openai_api_key=openai_api_key)
@@ -176,7 +162,7 @@ question_prompt = ChatPromptTemplate.from_messages(
             "system",
             """
         당신은 Bloom's Taxonomy(기억, 이해, 적용, 분석, 평가, 창조)에 기반한 질문을 생성하는 전문가입니다.
-        주어진 주제({topic})와 Bloom 단계({bloom_level})에 맞는 질문을 하나만 생성하세요.
+        주어진 주제({topic})와 Bloom {bloom_level}단계에 맞는 질문을 하나만 생성하세요.
         질문은 간결하고 명확하며, 해당 단계의 인지적 요구를 정확히 반영해야 합니다.
         - 1단계: Remember
         - 사고 수준: 낮음
@@ -219,7 +205,7 @@ eval_prompt = ChatPromptTemplate.from_messages(
         당신은 사용자의 응답이 질문의 의도에 부합하는지 체크하고, 응답이 부족하다면 피드백을 제공합니다.
         만약 사용자가 잘 모르는 내용이라 도움을 요청한다면, 답변을 제공하진 말고 사용자의 답변을 유도할 수 있도록 힌트를 제공해주세요.
         
-        주어진 질문({question})은 Bloom 단계({bloom_level})에 해당합니다.
+        주어진 질문({question})은 Bloom {bloom_level}단계에 해당합니다.
         사용자의 응답({user_answer})을 분석해 다음을 판단하세요:
         1. 응답이 질문의 의도에 부합하는가?
         2. 응답이 충분히 구체적인가?
@@ -247,100 +233,215 @@ eval_prompt = ChatPromptTemplate.from_messages(
 
 eval_chain = eval_prompt | llm2
 
-# FastAPI 엔드포인트
-class UserInput(BaseModel):
-    sessionId: Optional[str] = None
-    userAnswer: Optional[str] = None
+# 1. 데이터 모델 정의
+class StartChatRequest(BaseModel):
+    topic: Optional[str] = None
 
-@app.on_event("startup")
-async def startup_event():
-    set_daily_topic()
+class UserResponseRequest(BaseModel):
+    session_id: str
+    user_answer: str
+    current_level: int
+    topic: str
 
-@app.post("/chat")
-async def chat(user_input: UserInput, user_id: str = Depends(verify_token)):
-    # 세션 ID 초기화
-    session_id = user_input.sessionId or str(uuid.uuid4())
-    
-    # 오늘의 주제 가져오기
-    daily_topic = get_daily_topic()
-    if not daily_topic:
-        raise HTTPException(
-            status_code=500, detail="오늘의 주제가 설정되지 않았습니다."
-        )
+class EndChatRequest(BaseModel):
+    session_id: str
 
-    topic = daily_topic["topic"]
-    topic_prompt = daily_topic["topic_prompt"]
+class ChatResponse(BaseModel):
+    session_id: str
+    topic: str
+    current_level: int
+    question: Optional[str] = None
+    message: str
+    is_complete: bool = False
 
-    # 새 세션인 경우 session_logs에 먼저 생성
-    if not user_input.sessionId:
+# 2. 채팅 시작 API
+@app.post("/chat/start")
+async def start_chat(
+    request: StartChatRequest,
+    user_id: str = Depends(verify_token)
+) -> ChatResponse:
+    try:
+        # 1. 주제 선택 (요청된 주제가 없으면 오늘의 주제 선택)
+        daily_topic = get_daily_topic()
+        if not daily_topic:
+            raise HTTPException(
+                status_code=500,
+                detail="오늘의 주제가 설정되지 않았습니다. 잠시 후 다시 시도해주세요."
+            )
+        
+        topic = request.topic or daily_topic["topic"]
+        topic_prompt = daily_topic["topic_prompt"]
+        
+        # 2. 세션 생성
+        session_id = str(uuid.uuid4())
         create_session(session_id, topic, user_id)
-
-    # 현재 질문 확인
-    current_question = get_current_question(session_id)
-
-    # 첫 대화: Bloom 1단계 질문 제공
-    if not current_question:
-        question = question_chain.invoke({"topic": topic, "bloom_level": 1}).content
+        
+        # 3. Bloom's Taxonomy 1단계 질문 생성
+        question = question_chain.invoke({
+            "topic": topic,
+            "bloom_level": 1
+        }).content
+        
         save_question(session_id, topic, question, 1)
+        
+        response = ChatResponse(
+            session_id=session_id,
+            topic=topic,
+            current_level=1,
+            question=question,
+            message=f"안녕하세요! 오늘의 주제는 '{topic}'입니다. 첫 번째 질문을 드리겠습니다.",
+            is_complete=False
+        )
+        logger.info(f"채팅 시작: {response}")
+        return response
+    except Exception as e:
+        logger.error(f"채팅 시작 오류: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# 3. 사용자 응답 처리 API
+@app.post("/chat/respond")
+async def process_response(
+    request: UserResponseRequest,
+    user_id: str = Depends(verify_token)
+) -> ChatResponse:
+    try:
+        # 1. 현재 질문 확인
+        current_question = get_current_question(request.session_id)
+        logger.info(f"현재 질문: {current_question}")
+        if not current_question:
+            raise HTTPException(
+                status_code=404,
+                detail="진행 중인 질문을 찾을 수 없습니다."
+            )
+        
+        # 2. 응답 평가
+        evaluation = json.loads(
+            eval_chain.invoke({
+                "question": current_question["question"],
+                "bloom_level": current_question["bloom_level"],
+                "user_answer": request.user_answer
+            }).content
+        )
+        
+        # 3. 응답 저장
+        mark_answered(
+            request.session_id,
+            current_question["bloom_level"],
+            request.user_answer
+        )
+        
+        # 4. 다음 단계 결정
+        if evaluation["is_appropriate"]:
+            next_level = current_question["bloom_level"] + 1
+            
+            if next_level <= 6:
+                # 다음 단계로 진행
+                next_question = question_chain.invoke({
+                    "topic": request.topic,
+                    "bloom_level": next_level
+                }).content
+                
+                save_question(
+                    request.session_id,
+                    request.topic,
+                    next_question,
+                    next_level
+                )
+                
+                
+                response = ChatResponse(
+                    session_id=request.session_id,
+                    topic=request.topic,
+                    current_level=next_level,
+                    question=next_question,
+                    message="좋은 답변입니다! 다음 단계로 넘어가겠습니다.",
+                    is_complete=False
+                )
+                logger.info(f"다음 단계로 넘어가기: {response}")
+                return response
+            else:
+                # 모든 단계 완료
+                mark_session_completed(request.session_id)
+                response = ChatResponse(
+                    session_id=request.session_id,
+                    topic=request.topic,
+                    current_level=6,
+                    question=None,
+                    message="모든 단계를 완료하셨습니다! 수고하셨습니다.",
+                    is_complete=True
+                )
+                logger.info(f"모든 단계 완료: {response}")
+                return response
+        else:
+            # 힌트 제공 또는 추가 유도
+            message = (
+                evaluation["hint"]
+                if evaluation["is_looking_for_help"]
+                else f"조금 더 생각해볼까요? {evaluation['feedback']}"
+            )
+            
+            response = ChatResponse(
+                session_id=request.session_id,
+                topic=request.topic,
+                current_level=current_question["bloom_level"],
+                question=current_question["question"],
+                message=message,
+                is_complete=False
+            )
+            logger.info(f"힌트 제공 또는 추가 유도: {response}")
+            return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# 4. 채팅 세션 종료 API
+@app.post("/chat/end")
+async def end_chat(
+    request: EndChatRequest,
+    user_id: str = Depends(verify_token)
+) -> Dict[str, Any]:
+    try:
+        # 1. 세션 종료 처리
+        mark_session_completed(request.session_id)
+        
+        # 2. 세션 요약 생성
+        session_summary = get_session_summary(request.session_id)
+        
         return {
-            "sessionId": session_id,
-            "topicPrompt": topic_prompt,
-            "question": question,
-            "message": "자, 시작해볼까요?",
+            "session_id": request.session_id,
+            "summary": session_summary,
+            "message": "오늘의 학습을 마치겠습니다. 수고하셨습니다!"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# 5. 세션 요약 조회 함수 (새로 추가)
+def get_session_summary(session_id: str) -> Dict[str, Any]:
+    with get_db() as conn:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(
+            """
+            SELECT 
+                q.bloom_level,
+                q.question,
+                q.user_answer
+            FROM questions q
+            WHERE q.session_id = %s
+            ORDER BY q.bloom_level ASC
+            """,
+            (session_id,)
+        )
+        questions = cursor.fetchall()
+        
+        return {
+            "total_questions": len(questions),
+            "completed_levels": [q["bloom_level"] for q in questions],
+            "questions_and_answers": questions
         }
 
-    # 사용자 응답 처리
-    if user_input.userAnswer and current_question:
-        evaluation = json.loads(
-            eval_chain.invoke(
-                {
-                    "question": current_question["question"],
-                    "bloom_level": current_question["bloom_level"],
-                    "user_answer": user_input.userAnswer,
-                }
-            ).content
-        )
-
-        if evaluation["is_appropriate"]:
-            # 답변 저장 및 다음 질문 진행
-            mark_answered(
-                session_id, current_question["bloom_level"], user_input.userAnswer
-            )
-            next_level = current_question["bloom_level"] + 1
-            if next_level <= 6:
-                next_question = question_chain.invoke(
-                    {"topic": topic, "bloom_level": next_level}
-                ).content
-                save_question(session_id, topic, next_question, next_level)
-                return {
-                    "sessionId": session_id,
-                    "topicPrompt": topic_prompt,
-                    "question": next_question,
-                    "message": "잘했어요, 다음 질문으로 넘어갈게요.",
-                }
-            else:
-                mark_session_completed(session_id)
-                return {
-                    "sessionId": session_id,
-                    "topicPrompt": topic_prompt,
-                    "message": "오늘의 질문이 모두 끝났어요! 내일 새로운 주제로 만나요.",
-                }
-        else:
-            # 힌트 제공
-            if evaluation["is_looking_for_help"]:
-                return {
-                    "sessionId": session_id,
-                    "topicPrompt": topic_prompt,
-                    "question": current_question["question"],
-                    "message": f"{evaluation['hint']}",
-                }
-            # 추가 유도
-            else:
-                return {
-                    "sessionId": session_id,
-                    "topicPrompt": topic_prompt,
-                    "question": current_question["question"],
-                    "message": f"조금 더 생각해볼까요? {evaluation['feedback']}",
-                }
-
-    raise HTTPException(status_code=400, detail="잘못된 요청입니다.") 
+# 6. 서버 시작 시 실행되는 이벤트
+@app.on_event("startup")
+async def startup_event():
+    # 서버 시작 시 오늘의 주제가 있는지 확인만 하면 됨
+    daily_topic = get_daily_topic()
+    if not daily_topic:
+        print("경고: 오늘의 주제가 아직 선정되지 않았습니다. Airflow DAG가 정상적으로 실행되고 있는지 확인해주세요.") 
