@@ -1,7 +1,46 @@
-.Dockerfile
-init.sql
-docker-compose.yaml
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment
 .env
+<<<<<<< HEAD
 chatbot-api/logs/
 *.log
 airflow/logs/
+=======
+.venv
+env/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite3
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Chatbot API
+chatbot-api/logs/
+chatbot-api/dags/__pycache__/
+chatbot-api/src/__pycache__/
+chatbot-api/src/main.py
+chatbot-api/src/prompts/__pycache__/
+chatbot-api/src/services/__pycache__/
+>>>>>>> origin/feature/chatbot
