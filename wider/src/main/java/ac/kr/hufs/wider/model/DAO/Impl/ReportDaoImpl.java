@@ -21,7 +21,7 @@ public class ReportDaoImpl implements ReportDao{
     }
 
     @Override
-    public Optional<Report> findBySessionId(String sessionId) {
+    public List<Report> findBySessionId(String sessionId) {
         return reportRepository.findBySession_SessionId(sessionId);
     }
 
@@ -35,5 +35,13 @@ public class ReportDaoImpl implements ReportDao{
         return reportRepository.save(report);
     }
 
-    
+    @Override
+    public Optional<Report> findById(String reportId) {
+        return reportRepository.findById(reportId);
+    }
+
+    @Override
+    public void deleteAll(List<Report> reports) {
+        reportRepository.deleteAll(reports);
+    }
 }

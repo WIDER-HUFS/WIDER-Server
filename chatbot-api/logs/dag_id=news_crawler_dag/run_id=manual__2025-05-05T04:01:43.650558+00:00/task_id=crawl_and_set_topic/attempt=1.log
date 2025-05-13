@@ -1,0 +1,48 @@
+[2025-05-05T04:01:46.053+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: news_crawler_dag.crawl_and_set_topic manual__2025-05-05T04:01:43.650558+00:00 [queued]>
+[2025-05-05T04:01:46.058+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: news_crawler_dag.crawl_and_set_topic manual__2025-05-05T04:01:43.650558+00:00 [queued]>
+[2025-05-05T04:01:46.058+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 2
+[2025-05-05T04:01:46.066+0000] {taskinstance.py:1380} INFO - Executing <Task(PythonOperator): crawl_and_set_topic> on 2025-05-05 04:01:43.650558+00:00
+[2025-05-05T04:01:46.071+0000] {standard_task_runner.py:57} INFO - Started process 716 to run task
+[2025-05-05T04:01:46.074+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'news_crawler_dag', 'crawl_and_set_topic', 'manual__2025-05-05T04:01:43.650558+00:00', '--job-id', '7', '--raw', '--subdir', 'DAGS_FOLDER/news_crawler_dag.py', '--cfg-path', '/tmp/tmp5qlbemdd']
+[2025-05-05T04:01:46.077+0000] {standard_task_runner.py:85} INFO - Job 7: Subtask crawl_and_set_topic
+[2025-05-05T04:01:46.105+0000] {task_command.py:415} INFO - Running <TaskInstance: news_crawler_dag.crawl_and_set_topic manual__2025-05-05T04:01:43.650558+00:00 [running]> on host e353fff685ad
+[2025-05-05T04:01:46.136+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='news_crawler_dag' AIRFLOW_CTX_TASK_ID='crawl_and_set_topic' AIRFLOW_CTX_EXECUTION_DATE='2025-05-05T04:01:43.650558+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-05-05T04:01:43.650558+00:00'
+[2025-05-05T04:01:46.137+0000] {logging_mixin.py:151} INFO - 오늘의 카테고리: 경제
+[2025-05-05T04:01:46.314+0000] {logging_mixin.py:151} INFO - 헤드라인 기사 10개 수집됨
+[2025-05-05T04:01:46.429+0000] {logging_mixin.py:151} INFO - 
+[선택된 뉴스 기사]
+[2025-05-05T04:01:46.429+0000] {logging_mixin.py:151} INFO - 제목: 분양가 1억 가까이 올랐는데도…3기 신도시 청약 열기 후끈
+[2025-05-05T04:01:46.429+0000] {logging_mixin.py:151} INFO - 링크: https://n.news.naver.com/mnews/article/011/0004481651
+[2025-05-05T04:01:46.429+0000] {logging_mixin.py:151} INFO - [본문 내용]
+[2025-05-05T04:01:46.429+0000] {logging_mixin.py:151} INFO - 이번 주 하남교산 특별·일반공급···내주 부천대장 신혼희망타운 본청약
+하반기에는 남양주왕숙서 3천가구 분양
+[대우건설 제공]
+[한국토지주택공사 제공]
+[서울경제]
+올해 고양 창릉을 시작으로 3기 신도시 본청약이 본격화되면서 수요자들의 관심이 커지고 있다.
+본청약 분양가가 사전청약 당시 공개한 추정 분양가보다 최대 1억 원 가까이 올랐으나 주변 신축 단지와 비교해 여전히 가격 경쟁력이 있어 청약 신청이 몰리는 모습이다.
+5일 한국토지주택공사(LH)에 따르면 올해 3기 신도시 본청약 물량은 고양창릉, 하남교산, 부천대장, 남양주왕숙 등 4개 지구 7940가구다.
+첫 주자로 나선 고양창릉 고양창릉 3개 블록(A4·S5·S6)에서는 지난 2월 본청약을 진행했다.
+사전청약 당첨자들의 본청약 이후 남은 물량 764가구를 특별·일반공급했는데, 여기 총 4만1337명이 몰려 평균 경쟁률이 54 대 1을 기록했다. 특히 고양창릉 S5블록 전용면적 84㎡는 확정 분양가가 사전청약 당시 추정 분양가(6억7300만원)보다 1억원 가까이 높은 7억7289만원에 책정됐으나, 경쟁률이 410대 1에 달할 만큼 인기가 높았다.
+분양가가 15%가량 높아졌지만, 신청자들은 인근 신축 아파트와 비교했을 때 여전히 시세 차익을 기대할 수 있다는 점에 주목한 것으로 보인다.
+이달 7~9일에는 하남 교산지구 A2블록 '교산 푸르지오 더 퍼스트'의 특별공급과 일반공급이 이뤄진다. '교산 푸르지오 더 퍼스트'는 경기 하남시 천현동 130번지 일대에 지상 최고 29층, 10개동, 전용면적 51∼59㎡, 총 1천115가구 규모로 조성된다.
+전용 면적에 따른 분양가는 최고가 기준으로 △51㎡ 4억 9811만 원 △55㎡ 5억 3355만 원 △ 58㎡ 5억 6214만 원 △59㎡ 5억 7167만 원이다.
+2021년 12월 사전청약 당시 추정 분양가보다 최대 18%, 1억 원 가까이 인상됐다. 그런데도 사전청약 당첨자 중 84%가 본청약을 신청했다.
+이어 14~15일에는 신혼희망타운인 부천대장 A5·A6블록 'e편한세상 대장 퍼스티움'의 신규 신청자 본청약이 진행된다. A5블록은 683가구, A6블록은 461가구 규모로 최고 분양가는 각각 5억 519만 원, 5억 657만 원이다. 이 중 잔여 물량은 A5블록 33호·A6블록 24가구로, 사전청약 당첨자 중 이탈자가 생기면 일반분양 물량이 늘어날 수 있다.
+이달 21~23일에는 부천대장 A7·A8블록 'e편한세상 대장 퍼스티움'의 특별·일반공급 청약이 진행된다. 공급 물량은 총 865가구이며 사전청약 당첨자에게 673가구, 일반분양으로 192가구가 공급된다. 두 블록 모두 59㎡ 단일 평형이며, 분양가는 평균 5억 2000만 원이다.
+2021년 사전청약 때 A7블록 추정 분양가는 4억 3551만 원, A8블록은 4억 2886만 원이었는데, 확정 분양가가 최대 8966만원(21%) 올랐다.
+부천대장 A7·A8 블록은 2031년 개통 예정인 대장홍대선 오정역이 도보권에 위치해 부천대장 지구 내에서도 교통 여건이 우수한 편이다. 하반기에는 남양주왕숙에서 본청약이 이어진다. 7월 A1·A2·B1·B2블록 2천177가구, 11월 A24·B17블록 892가구 분양이 예정돼 있다.
+[2025-05-05T04:01:46.566+0000] {logging_mixin.py:151} INFO - 
+[추가 기사]
+[2025-05-05T04:01:46.567+0000] {logging_mixin.py:151} INFO - 제목: 분양가 1억 가까이 올랐는데도…3기 신도시 청약 열기 후끈
+[2025-05-05T04:01:46.567+0000] {logging_mixin.py:151} INFO - 링크: https://n.news.naver.com/mnews/article/011/0004481651
+[2025-05-05T04:01:47.699+0000] {logging_mixin.py:151} INFO - 
+[추가 기사]
+[2025-05-05T04:01:47.699+0000] {logging_mixin.py:151} INFO - 제목: ‘정치 테마주’ 기승에 지난달 투자경고 56개 종목 ‘역대 최다’
+[2025-05-05T04:01:47.699+0000] {logging_mixin.py:151} INFO - 링크: https://n.news.naver.com/mnews/article/032/0003367519
+[2025-05-05T04:01:50.225+0000] {logging_mixin.py:151} INFO - 추출된 주제: {'topic': '투자경고', 'topic_prompt': '정치 테마주에 대한 투자 경고가 증가하는 이유는 무엇일까요?'}
+[2025-05-05T04:01:50.226+0000] {logging_mixin.py:151} INFO - {'topic': '투자경고', 'topic_prompt': '정치 테마주에 대한 투자 경고가 증가하는 이유는 무엇일까요?'}
+[2025-05-05T04:01:50.352+0000] {python.py:194} INFO - Done. Returned value was: None
+[2025-05-05T04:01:50.367+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=news_crawler_dag, task_id=crawl_and_set_topic, execution_date=20250505T040143, start_date=20250505T040146, end_date=20250505T040150
+[2025-05-05T04:01:50.391+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2025-05-05T04:01:50.411+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check

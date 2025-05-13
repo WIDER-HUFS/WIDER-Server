@@ -8,27 +8,41 @@ import org.springframework.stereotype.Service;
 
 import ac.kr.hufs.wider.model.DAO.QuestionDao;
 import ac.kr.hufs.wider.model.Entity.Question;
+import ac.kr.hufs.wider.model.Entity.QuestionId;
 import ac.kr.hufs.wider.model.Repository.QuestionRepository;
 
 @Service
-public class QuestionDaoImpl implements QuestionDao{
+public class QuestionDaoImpl implements QuestionDao {
     @Autowired
     private QuestionRepository questionRepository;
 
     @Override
-    public List<Question> findAllBySession(String sessionId) {
+    public Question save(Question question) {
+        return questionRepository.save(question);
+    }
+
+    @Override
+    public List<Question> findBySessionIdOrderByBloomLevelAsc(String sessionId) {
         return questionRepository.findBySessionIdOrderByBloomLevelAsc(sessionId);
     }
 
     @Override
-    public Optional<Question> findQuestion(String sessionId, int level) {
-        return questionRepository.findBySessionIdAndBloomLevel(sessionId, level);
+    public Optional<Question> findBySessionIdAndBloomLevel(String sessionId, int bloomLevel) {
+        return questionRepository.findBySessionIdAndBloomLevel(sessionId, bloomLevel);
     }
 
     @Override
-    public Question save(Question q) {
-        return questionRepository.save(q);
+    public boolean existsById(QuestionId questionId) {
+        return questionRepository.existsById(questionId);
     }
 
-    
+    @Override
+    public void deleteById(QuestionId questionId) {
+        questionRepository.deleteById(questionId);
+    }
+
+    @Override
+    public void deleteAll(List<Question> questions) {
+        questionRepository.deleteAll(questions);
+    }
 }

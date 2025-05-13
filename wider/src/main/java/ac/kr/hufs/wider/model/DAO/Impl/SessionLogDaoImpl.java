@@ -30,5 +30,13 @@ public class SessionLogDaoImpl implements SessionLogDao{
         return sessionLogRepository.save(log);
     }
 
-    
+    @Override
+    public void deleteById(String sessionId) {
+        sessionLogRepository.deleteById(sessionId);
+    }
+
+    @Override
+    public void deleteAll(List<SessionLog> sessions) {
+        sessionLogRepository.deleteAll(sessions);
+    }
 }

@@ -1,0 +1,60 @@
+[2025-05-09T05:36:52.192+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: news_crawler_dag.crawl_and_set_topic scheduled__2025-05-08T00:00:00+00:00 [queued]>
+[2025-05-09T05:36:52.206+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: news_crawler_dag.crawl_and_set_topic scheduled__2025-05-08T00:00:00+00:00 [queued]>
+[2025-05-09T05:36:52.207+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 2
+[2025-05-09T05:36:52.217+0000] {taskinstance.py:1380} INFO - Executing <Task(PythonOperator): crawl_and_set_topic> on 2025-05-08 00:00:00+00:00
+[2025-05-09T05:36:52.226+0000] {standard_task_runner.py:57} INFO - Started process 70 to run task
+[2025-05-09T05:36:52.230+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'news_crawler_dag', 'crawl_and_set_topic', 'scheduled__2025-05-08T00:00:00+00:00', '--job-id', '14', '--raw', '--subdir', 'DAGS_FOLDER/news_crawler_dag.py', '--cfg-path', '/tmp/tmp99kt_hpi']
+[2025-05-09T05:36:52.233+0000] {standard_task_runner.py:85} INFO - Job 14: Subtask crawl_and_set_topic
+[2025-05-09T05:36:52.267+0000] {task_command.py:415} INFO - Running <TaskInstance: news_crawler_dag.crawl_and_set_topic scheduled__2025-05-08T00:00:00+00:00 [running]> on host e353fff685ad
+[2025-05-09T05:36:52.321+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='news_crawler_dag' AIRFLOW_CTX_TASK_ID='crawl_and_set_topic' AIRFLOW_CTX_EXECUTION_DATE='2025-05-08T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-05-08T00:00:00+00:00'
+[2025-05-09T05:36:52.322+0000] {logging_mixin.py:151} INFO - 오늘의 카테고리: 정치
+[2025-05-09T05:36:52.588+0000] {logging_mixin.py:151} INFO - 헤드라인 기사 10개 수집됨
+[2025-05-09T05:36:52.814+0000] {logging_mixin.py:151} INFO - 
+[선택된 뉴스 기사]
+[2025-05-09T05:36:52.815+0000] {logging_mixin.py:151} INFO - 제목: 민주, 350억 ‘이재명 펀드’ 출시
+[2025-05-09T05:36:52.815+0000] {logging_mixin.py:151} INFO - 링크: https://n.news.naver.com/mnews/article/023/0003904166
+[2025-05-09T05:36:52.816+0000] {logging_mixin.py:151} INFO - [본문 내용]
+[2025-05-09T05:36:52.816+0000] {logging_mixin.py:151} INFO - 이재명 더불어민주당 대통령 후보가 9일 오전 경북 경주시 한 아파트 단지를 찾아 어린이들의 사인 요청을 받고 있다./뉴스1
+더불어민주당이 이재명 대선 후보의 선거 비용을 마련하기 위해 350억원 규모의 ‘이재명 펀드’를 출시한다. 이르면 오는 20일 출시될 전망이다.
+조승래 수석대변인은 9일 “이재명 펀드를 이달 20일 또는 21일 개시하도록 준비 중”이라며 “350억원 정도 규모를 조성하는 것을 논의하고 있다”고 했다.
+민주당은 지난 2022년 20대 대선 때도 NFT를 활용한 ‘이재명 펀드’를 출시했었다. 공모 개시 당시 2시간 만에 목표액인 350억원을 달성했다. 조 수석대변인은 “선거 캠페인을 진행하면서 시민 참여로 펀드를 조성하는 것”이라며 “시민들과 시민 운동을 함께하고, 선거자금을 안정적으로 조달하는 목적”이라고 했다.
+대선 공식 선거운동 기간은 12일부터다. 민주당은 9일 기준 17대 광역시·도의 선대위 구성을 마쳤다고 밝혔다. 조 수석대변인은 “선거 기간 동안의 하루는 대한민국 5000만 국민의 하루가 응축된 엄중하고 중요한 시간”이라며 “이 후보와 선대위는 국민의 의견을 경청하겠다”고 했다.
+[2025-05-09T05:36:54.040+0000] {logging_mixin.py:151} INFO - 
+[추가 기사]
+[2025-05-09T05:36:54.041+0000] {logging_mixin.py:151} INFO - 제목: 김문수-국힘 지도부 정면 충돌…이재명, 경북 표심 공략
+[2025-05-09T05:36:54.041+0000] {logging_mixin.py:151} INFO - 링크: https://n.news.naver.com/mnews/article/422/0000738874
+[2025-05-09T05:36:55.143+0000] {logging_mixin.py:151} INFO - 
+[추가 기사]
+[2025-05-09T05:36:55.144+0000] {logging_mixin.py:151} INFO - 제목: 김문수, 당 단일화 강행에 9일 일정 급취소…韓측 "다시 만나자"
+[2025-05-09T05:36:55.144+0000] {logging_mixin.py:151} INFO - 링크: https://n.news.naver.com/mnews/article/025/0003439563
+[2025-05-09T05:36:57.591+0000] {logging_mixin.py:151} INFO - 추출된 주제: {'topic': '국민의힘 내홍', 'topic_prompt': '국민의힘 내홍이 대선에 미치는 영향은 무엇일까요? 이러한 내부 갈등이 유권자에게 어떤 신뢰 문제를 야기할 수 있을까요?'}
+[2025-05-09T05:36:57.591+0000] {logging_mixin.py:151} INFO - {'topic': '국민의힘 내홍', 'topic_prompt': '국민의힘 내홍이 대선에 미치는 영향은 무엇일까요? 이러한 내부 갈등이 유권자에게 어떤 신뢰 문제를 야기할 수 있을까요?'}
+[2025-05-09T05:37:07.618+0000] {logging_mixin.py:151} INFO - Error in set_daily_topic: (2003, "Can't connect to MySQL server on 'hufs-wider.cpwc08i2mniz.ap-northeast-2.rds.amazonaws.com' (timed out)")
+[2025-05-09T05:37:07.622+0000] {taskinstance.py:1935} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/pymysql/connections.py", line 644, in connect
+    sock = socket.create_connection(
+  File "/usr/local/lib/python3.8/socket.py", line 808, in create_connection
+    raise err
+  File "/usr/local/lib/python3.8/socket.py", line 796, in create_connection
+    sock.connect(sa)
+socket.timeout: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 192, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 209, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/news_crawler_dag.py", line 41, in set_daily_topic
+    conn = pymysql.connect(
+  File "/home/airflow/.local/lib/python3.8/site-packages/pymysql/connections.py", line 358, in __init__
+    self.connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/pymysql/connections.py", line 711, in connect
+    raise exc
+pymysql.err.OperationalError: (2003, "Can't connect to MySQL server on 'hufs-wider.cpwc08i2mniz.ap-northeast-2.rds.amazonaws.com' (timed out)")
+[2025-05-09T05:37:07.642+0000] {taskinstance.py:1398} INFO - Marking task as UP_FOR_RETRY. dag_id=news_crawler_dag, task_id=crawl_and_set_topic, execution_date=20250508T000000, start_date=20250509T053652, end_date=20250509T053707
+[2025-05-09T05:37:07.668+0000] {standard_task_runner.py:104} ERROR - Failed to execute job 14 for task crawl_and_set_topic ((2003, "Can't connect to MySQL server on 'hufs-wider.cpwc08i2mniz.ap-northeast-2.rds.amazonaws.com' (timed out)"); 70)
+[2025-05-09T05:37:07.704+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 1
+[2025-05-09T05:37:07.716+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check

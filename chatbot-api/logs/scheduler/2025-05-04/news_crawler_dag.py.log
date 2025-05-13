@@ -1,0 +1,224 @@
+[2025-05-04T03:28:31.686+0000] {processor.py:157} INFO - Started process (PID=41) to work on /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:28:31.687+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/news_crawler_dag.py for tasks to queue
+[2025-05-04T03:28:31.689+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:28:31.689+0000] {dagbag.py:536} INFO - Filling up the DagBag from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:28:31.699+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:28:31.698+0000] {dagbag.py:346} ERROR - Failed to import: /opt/airflow/dags/news_crawler_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 342, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/news_crawler_dag.py", line 6, in <module>
+    import pymysql
+ModuleNotFoundError: No module named 'pymysql'
+[2025-05-04T03:28:31.700+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:28:31.722+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/news_crawler_dag.py took 0.040 seconds
+[2025-05-04T03:29:02.327+0000] {processor.py:157} INFO - Started process (PID=96) to work on /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:29:02.328+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/news_crawler_dag.py for tasks to queue
+[2025-05-04T03:29:02.336+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:29:02.335+0000] {dagbag.py:536} INFO - Filling up the DagBag from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:29:02.345+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:29:02.343+0000] {dagbag.py:346} ERROR - Failed to import: /opt/airflow/dags/news_crawler_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 342, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/news_crawler_dag.py", line 6, in <module>
+    import pymysql
+ModuleNotFoundError: No module named 'pymysql'
+[2025-05-04T03:29:02.346+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:29:02.377+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/news_crawler_dag.py took 0.053 seconds
+[2025-05-04T03:29:32.473+0000] {processor.py:157} INFO - Started process (PID=151) to work on /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:29:32.475+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/news_crawler_dag.py for tasks to queue
+[2025-05-04T03:29:32.480+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:29:32.480+0000] {dagbag.py:536} INFO - Filling up the DagBag from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:29:32.490+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:29:32.488+0000] {dagbag.py:346} ERROR - Failed to import: /opt/airflow/dags/news_crawler_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 342, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/news_crawler_dag.py", line 6, in <module>
+    import pymysql
+ModuleNotFoundError: No module named 'pymysql'
+[2025-05-04T03:29:32.491+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:29:32.516+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/news_crawler_dag.py took 0.049 seconds
+[2025-05-04T03:30:02.766+0000] {processor.py:157} INFO - Started process (PID=206) to work on /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:30:02.768+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/news_crawler_dag.py for tasks to queue
+[2025-05-04T03:30:02.775+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:30:02.775+0000] {dagbag.py:536} INFO - Filling up the DagBag from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:30:02.784+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:30:02.782+0000] {dagbag.py:346} ERROR - Failed to import: /opt/airflow/dags/news_crawler_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 342, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/news_crawler_dag.py", line 6, in <module>
+    import pymysql
+ModuleNotFoundError: No module named 'pymysql'
+[2025-05-04T03:30:02.785+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:30:02.809+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/news_crawler_dag.py took 0.048 seconds
+[2025-05-04T03:30:33.154+0000] {processor.py:157} INFO - Started process (PID=261) to work on /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:30:33.157+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/news_crawler_dag.py for tasks to queue
+[2025-05-04T03:30:33.166+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:30:33.166+0000] {dagbag.py:536} INFO - Filling up the DagBag from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:30:33.178+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:30:33.175+0000] {dagbag.py:346} ERROR - Failed to import: /opt/airflow/dags/news_crawler_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 342, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/news_crawler_dag.py", line 6, in <module>
+    import pymysql
+ModuleNotFoundError: No module named 'pymysql'
+[2025-05-04T03:30:33.179+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:30:33.209+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/news_crawler_dag.py took 0.061 seconds
+[2025-05-04T03:30:44.068+0000] {processor.py:157} INFO - Started process (PID=316) to work on /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:30:44.071+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/news_crawler_dag.py for tasks to queue
+[2025-05-04T03:30:44.078+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:30:44.077+0000] {dagbag.py:536} INFO - Filling up the DagBag from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:30:44.105+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:30:44.103+0000] {dagbag.py:346} ERROR - Failed to import: /opt/airflow/dags/news_crawler_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 342, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/news_crawler_dag.py", line 6, in <module>
+    import pymysql
+ModuleNotFoundError: No module named 'pymysql'
+[2025-05-04T03:30:44.106+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:30:44.149+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/news_crawler_dag.py took 0.091 seconds
+[2025-05-04T03:30:47.086+0000] {processor.py:157} INFO - Started process (PID=317) to work on /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:30:47.087+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/news_crawler_dag.py for tasks to queue
+[2025-05-04T03:30:47.090+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:30:47.089+0000] {dagbag.py:536} INFO - Filling up the DagBag from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:30:47.098+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:30:47.097+0000] {dagbag.py:346} ERROR - Failed to import: /opt/airflow/dags/news_crawler_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 342, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/news_crawler_dag.py", line 6, in <module>
+    import pymysql
+ModuleNotFoundError: No module named 'pymysql'
+[2025-05-04T03:30:47.099+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:30:47.124+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/news_crawler_dag.py took 0.042 seconds
+[2025-05-04T03:31:17.215+0000] {processor.py:157} INFO - Started process (PID=372) to work on /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:31:17.216+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/news_crawler_dag.py for tasks to queue
+[2025-05-04T03:31:17.217+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:31:17.217+0000] {dagbag.py:536} INFO - Filling up the DagBag from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:31:17.222+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:31:17.221+0000] {dagbag.py:346} ERROR - Failed to import: /opt/airflow/dags/news_crawler_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 342, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/news_crawler_dag.py", line 6, in <module>
+    import pymysql
+ModuleNotFoundError: No module named 'pymysql'
+[2025-05-04T03:31:17.222+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:31:17.240+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/news_crawler_dag.py took 0.029 seconds
+[2025-05-04T03:31:47.311+0000] {processor.py:157} INFO - Started process (PID=427) to work on /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:31:47.311+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/news_crawler_dag.py for tasks to queue
+[2025-05-04T03:31:47.313+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:31:47.313+0000] {dagbag.py:536} INFO - Filling up the DagBag from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:31:47.317+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:31:47.317+0000] {dagbag.py:346} ERROR - Failed to import: /opt/airflow/dags/news_crawler_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 342, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/news_crawler_dag.py", line 6, in <module>
+    import pymysql
+ModuleNotFoundError: No module named 'pymysql'
+[2025-05-04T03:31:47.318+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:31:47.330+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/news_crawler_dag.py took 0.025 seconds
+[2025-05-04T03:32:17.453+0000] {processor.py:157} INFO - Started process (PID=482) to work on /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:32:17.454+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/news_crawler_dag.py for tasks to queue
+[2025-05-04T03:32:17.457+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:32:17.457+0000] {dagbag.py:536} INFO - Filling up the DagBag from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:32:17.462+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:32:17.461+0000] {dagbag.py:346} ERROR - Failed to import: /opt/airflow/dags/news_crawler_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 342, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/news_crawler_dag.py", line 6, in <module>
+    import pymysql
+ModuleNotFoundError: No module named 'pymysql'
+[2025-05-04T03:32:17.462+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:32:17.477+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/news_crawler_dag.py took 0.028 seconds
+[2025-05-04T03:32:47.585+0000] {processor.py:157} INFO - Started process (PID=537) to work on /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:32:47.586+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/news_crawler_dag.py for tasks to queue
+[2025-05-04T03:32:47.587+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:32:47.587+0000] {dagbag.py:536} INFO - Filling up the DagBag from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:32:47.592+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:32:47.591+0000] {dagbag.py:346} ERROR - Failed to import: /opt/airflow/dags/news_crawler_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 342, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/news_crawler_dag.py", line 6, in <module>
+    import pymysql
+ModuleNotFoundError: No module named 'pymysql'
+[2025-05-04T03:32:47.593+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:32:47.606+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/news_crawler_dag.py took 0.024 seconds
+[2025-05-04T03:33:17.827+0000] {processor.py:157} INFO - Started process (PID=592) to work on /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:33:17.828+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/news_crawler_dag.py for tasks to queue
+[2025-05-04T03:33:17.830+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:33:17.830+0000] {dagbag.py:536} INFO - Filling up the DagBag from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:33:17.836+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:33:17.835+0000] {dagbag.py:346} ERROR - Failed to import: /opt/airflow/dags/news_crawler_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 342, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/news_crawler_dag.py", line 6, in <module>
+    import pymysql
+ModuleNotFoundError: No module named 'pymysql'
+[2025-05-04T03:33:17.836+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:33:17.852+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/news_crawler_dag.py took 0.029 seconds
+[2025-05-04T03:33:48.861+0000] {processor.py:157} INFO - Started process (PID=647) to work on /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:33:48.861+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/news_crawler_dag.py for tasks to queue
+[2025-05-04T03:33:48.864+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:33:48.864+0000] {dagbag.py:536} INFO - Filling up the DagBag from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:33:48.870+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:33:48.868+0000] {dagbag.py:346} ERROR - Failed to import: /opt/airflow/dags/news_crawler_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 342, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/news_crawler_dag.py", line 6, in <module>
+    import pymysql
+ModuleNotFoundError: No module named 'pymysql'
+[2025-05-04T03:33:48.870+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:33:48.887+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/news_crawler_dag.py took 0.030 seconds
+[2025-05-04T03:34:19.764+0000] {processor.py:157} INFO - Started process (PID=702) to work on /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:34:19.765+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/news_crawler_dag.py for tasks to queue
+[2025-05-04T03:34:19.767+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:34:19.767+0000] {dagbag.py:536} INFO - Filling up the DagBag from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:34:19.773+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:34:19.772+0000] {dagbag.py:346} ERROR - Failed to import: /opt/airflow/dags/news_crawler_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 342, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/news_crawler_dag.py", line 6, in <module>
+    import pymysql
+ModuleNotFoundError: No module named 'pymysql'
+[2025-05-04T03:34:19.773+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:34:19.787+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/news_crawler_dag.py took 0.027 seconds
+[2025-05-04T03:34:50.734+0000] {processor.py:157} INFO - Started process (PID=757) to work on /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:34:50.735+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/news_crawler_dag.py for tasks to queue
+[2025-05-04T03:34:50.738+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:34:50.738+0000] {dagbag.py:536} INFO - Filling up the DagBag from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:34:50.748+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:34:50.747+0000] {dagbag.py:346} ERROR - Failed to import: /opt/airflow/dags/news_crawler_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 342, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/news_crawler_dag.py", line 6, in <module>
+    import pymysql
+ModuleNotFoundError: No module named 'pymysql'
+[2025-05-04T03:34:50.748+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:34:50.768+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/news_crawler_dag.py took 0.041 seconds
+[2025-05-04T03:35:21.715+0000] {processor.py:157} INFO - Started process (PID=812) to work on /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:35:21.716+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/news_crawler_dag.py for tasks to queue
+[2025-05-04T03:35:21.718+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:35:21.718+0000] {dagbag.py:536} INFO - Filling up the DagBag from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:35:21.724+0000] {logging_mixin.py:154} INFO - [2025-05-04T03:35:21.723+0000] {dagbag.py:346} ERROR - Failed to import: /opt/airflow/dags/news_crawler_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 342, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/news_crawler_dag.py", line 6, in <module>
+    import pymysql
+ModuleNotFoundError: No module named 'pymysql'
+[2025-05-04T03:35:21.724+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/news_crawler_dag.py
+[2025-05-04T03:35:21.741+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/news_crawler_dag.py took 0.030 seconds

@@ -1,0 +1,35 @@
+[2025-05-09T05:50:23.754+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: news_crawler_dag.crawl_and_set_topic manual__2025-05-09T05:50:21.919775+00:00 [queued]>
+[2025-05-09T05:50:23.757+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: news_crawler_dag.crawl_and_set_topic manual__2025-05-09T05:50:21.919775+00:00 [queued]>
+[2025-05-09T05:50:23.757+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 2
+[2025-05-09T05:50:23.761+0000] {taskinstance.py:1380} INFO - Executing <Task(PythonOperator): crawl_and_set_topic> on 2025-05-09 05:50:21.919775+00:00
+[2025-05-09T05:50:23.764+0000] {standard_task_runner.py:57} INFO - Started process 283 to run task
+[2025-05-09T05:50:23.765+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'news_crawler_dag', 'crawl_and_set_topic', 'manual__2025-05-09T05:50:21.919775+00:00', '--job-id', '17', '--raw', '--subdir', 'DAGS_FOLDER/news_crawler_dag.py', '--cfg-path', '/tmp/tmpygwycm_r']
+[2025-05-09T05:50:23.767+0000] {standard_task_runner.py:85} INFO - Job 17: Subtask crawl_and_set_topic
+[2025-05-09T05:50:23.791+0000] {task_command.py:415} INFO - Running <TaskInstance: news_crawler_dag.crawl_and_set_topic manual__2025-05-09T05:50:21.919775+00:00 [running]> on host e353fff685ad
+[2025-05-09T05:50:23.825+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='news_crawler_dag' AIRFLOW_CTX_TASK_ID='crawl_and_set_topic' AIRFLOW_CTX_EXECUTION_DATE='2025-05-09T05:50:21.919775+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-05-09T05:50:21.919775+00:00'
+[2025-05-09T05:50:23.826+0000] {logging_mixin.py:151} INFO - 오늘의 카테고리: 정치
+[2025-05-09T05:50:23.979+0000] {logging_mixin.py:151} INFO - 헤드라인 기사 10개 수집됨
+[2025-05-09T05:50:24.073+0000] {logging_mixin.py:151} INFO - 
+[선택된 뉴스 기사]
+[2025-05-09T05:50:24.073+0000] {logging_mixin.py:151} INFO - 제목: 이재명 펀드 다시 열린다…"350억 규모로 20~21일 개시 예정"
+[2025-05-09T05:50:24.074+0000] {logging_mixin.py:151} INFO - 링크: https://n.news.naver.com/mnews/article/014/0005347184
+[2025-05-09T05:50:24.074+0000] {logging_mixin.py:151} INFO - [본문 내용]
+[2025-05-09T05:50:24.074+0000] {logging_mixin.py:151} INFO - 민심을 청취하는 '경청 투어'에 나선 이재명 더불어민주당 대선후보가 9일 경북 경주시 용강동 아파트단지 인근에서 비가 내리자 우산을 펼치고 있다. 사진=뉴시스
+[파이낸셜뉴스] 더불어민주당이 이재명 대선 후보를 위한 시민 참여형 펀드를 오는 20일 또는 21일경 다시 개시할 예정이다. 선대위는 "과거 성공 사례를 토대로 350억원 규모 펀드를 준비 중”이라고 밝혔다.
+조승래 선대위 수석대변인은 9일 오전 브리핑에서 "이번 대선은 무능한 윤석열 정권과 12·3 내란세력에 대한 심판의 성격이 명확하다"며 "이재명 후보와 함께하는 시민의 펀드로 선거운동 안정성과 국민 참여를 동시에 확보하겠다"고 설명했다.
+민주당은 지난 2022년 대선에서도 754억원 규모의 '이재명 펀드'를 하루 만에 완판시키며 흥행에 성공한 바 있다. 당시 연 3.5% 수익률에 원금 보장이라는 조건이 붙은 시민 펀드는 정치자금 조달의 새로운 모델로 주목받았다.
+이번 펀드는 21대 대통령 선거 공식 선거운동이 시작되는 12일을 기점으로, 금·토·일 사흘간의 첫 유세 일정과 맞물려 대규모 대중 캠페인과 함께 개시될 전망이다.
+[2025-05-09T05:50:26.439+0000] {logging_mixin.py:151} INFO - 
+[추가 기사]
+[2025-05-09T05:50:26.439+0000] {logging_mixin.py:151} INFO - 제목: 김문수측 "후보교체 불가…'도장들고 나르샤 2탄'되면 대선참패"
+[2025-05-09T05:50:26.440+0000] {logging_mixin.py:151} INFO - 링크: https://n.news.naver.com/mnews/article/001/0015377648
+[2025-05-09T05:50:31.133+0000] {logging_mixin.py:151} INFO - 
+[추가 기사]
+[2025-05-09T05:50:31.133+0000] {logging_mixin.py:151} INFO - 제목: 이준석 "당 대표때 받은 음해, 국힘 단일화 사태로 오해 풀린다"[한판승부]
+[2025-05-09T05:50:31.133+0000] {logging_mixin.py:151} INFO - 링크: https://n.news.naver.com/mnews/article/079/0004021955
+[2025-05-09T05:50:34.604+0000] {logging_mixin.py:151} INFO - 추출된 주제: {'topic': '대선 후보 단일화', 'topic_prompt': '현재 대선 후보들 간의 단일화 협상이 진행 중인 가운데, 이 과정이 유권자들에게 어떤 영향을 미칠 것이라고 생각하십니까? 단일화가 이루어질 경우, 정치적 지형이 어떻게 변화할 수 있을까요?'}
+[2025-05-09T05:50:34.604+0000] {logging_mixin.py:151} INFO - {'topic': '대선 후보 단일화', 'topic_prompt': '현재 대선 후보들 간의 단일화 협상이 진행 중인 가운데, 이 과정이 유권자들에게 어떤 영향을 미칠 것이라고 생각하십니까? 단일화가 이루어질 경우, 정치적 지형이 어떻게 변화할 수 있을까요?'}
+[2025-05-09T05:50:34.704+0000] {python.py:194} INFO - Done. Returned value was: None
+[2025-05-09T05:50:34.716+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=news_crawler_dag, task_id=crawl_and_set_topic, execution_date=20250509T055021, start_date=20250509T055023, end_date=20250509T055034
+[2025-05-09T05:50:34.775+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2025-05-09T05:50:34.787+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check

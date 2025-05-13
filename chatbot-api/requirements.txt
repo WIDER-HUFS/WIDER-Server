@@ -4,5 +4,7 @@ langchain_openai
 langchain_core
 langchain
 langchain_community
-langchain_teddynote
 python-dotenv
+apache-airflow==2.7.1
+pymysql
+PyMySQL==1.1.0

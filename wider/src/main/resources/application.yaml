@@ -36,19 +36,17 @@ spring:
 
     # 데이터베이스 설정 
     datasource:
-        url: jdbc:mysql://localhost:3306/widerdb?userSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
-        username: hoo
-        password: hoo1234
+        url: jdbc:mysql://hufs-wider.cpwc08i2mniz.ap-northeast-2.rds.amazonaws.com:3306/widerdb?userSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+        username: admin
+        password: hufswider123
         driver-class-name: com.mysql.cj.jdbc.Driver
     # jpa 설정 
     jpa:
-        hibernate:
-            ddl-auto: update
-            transaction:
-                jta:
-                    platform: org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform
         properties:
             hibernate:
+                transaction:
+                        jta:
+                            platform: org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform
                 show_sql: true
                 format_sql: true
                 dialect:
@@ -81,4 +79,15 @@ spring:
 #     doc-expansion: none
 #   paths-to-match:
 #     - /**
+    
+jwt:
+  secret: yourSecretKeyShouldBeLongAndSecureAndStoredInEnvironmentVariables
+  expiration: 86400000 # 24시간
+    
+logging:
+    level:
+        root: INFO
+        ac.kr.hufs.wider: DEBUG
+        org.springframework.web: DEBUG
+        org.springframework.web.client.RestTemplate: DEBUG
     
