@@ -8,3 +8,5 @@ python-dotenv
 apache-airflow==2.7.1
 pymysql
 PyMySQL==1.1.0
+pyjwt==2.10.0
+python-dotenv==1.0.1
