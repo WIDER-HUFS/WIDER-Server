@@ -31,8 +31,8 @@ public class ReportController {
         @PathVariable String sessionId,
         @RequestHeader("Authorization") String token
     ) {
-        // String fastApiUrl = "http://localhost:8000/chat/report/generate/" + sessionId;
-        String fastApiUrl = "https://www.widerhufs.xyz/chat/report/generate/" + sessionId;
+        String fastApiUrl = "http://127.0.0.1:8000/chat/report/generate/" + sessionId;
+        // String fastApiUrl = "https://www.widerhufs.xyz/chat/report/generate/" + sessionId;
         log.info("Generating report for sessionId: {}", sessionId);
 
         HttpHeaders headers = new HttpHeaders();
@@ -66,8 +66,8 @@ public class ReportController {
         @PathVariable String sessionId,
         @RequestHeader("Authorization") String token
     ) {
-        // String fastApiUrl = "http://localhost:8000/chat/report/" + sessionId;
-        String fastApiUrl = "https://www.widerhufs.xyz/chat/report/" + sessionId;
+        String fastApiUrl = "http://127.0.0.1:8000/chat/report/" + sessionId;
+        // String fastApiUrl = "https://www.widerhufs.xyz/chat/report/" + sessionId;
         log.info("Getting report for sessionId: {}", sessionId);
 
         HttpHeaders headers = new HttpHeaders();
