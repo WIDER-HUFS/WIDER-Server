@@ -33,8 +33,8 @@ public class ChatController {
         @RequestHeader("Authorization") String token,
         @RequestBody StartChatRequestDTO request
     ) {
-        // String fastApiUrl = "http://localhost:8000/chat/start";
-        String fastApiUrl = "https://www.widerhufs.xyz/chat/start";
+        String fastApiUrl = "http://127.0.0.1:8000/chat/start";
+        // String fastApiUrl = "https://www.widerhufs.xyz/chat/start";
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
@@ -67,8 +67,8 @@ public class ChatController {
         @RequestHeader("Authorization") String token,
         @RequestBody UserResponseRequestDTO request
     ) {
-        // String fastApiUrl = "http://localhost:8000/chat/respond";
-        String fastApiUrl = "https://www.widerhufs.xyz/chat/respond";
+        String fastApiUrl = "http://127.0.0.1:8000/chat/respond";
+        // String fastApiUrl = "https://www.widerhufs.xyz/chat/respond";
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
 
@@ -98,8 +98,8 @@ public class ChatController {
         @RequestHeader("Authorization") String token,
         @RequestBody EndChatRequestDTO request
     ) {
-        // String fastApiUrl = "http://localhost:8000/chat/end";
-        String fastApiUrl = "https://www.widerhufs.xyz/chat/end";
+        String fastApiUrl = "http://127.0.0.1:8000/chat/end";
+        // String fastApiUrl = "https://www.widerhufs.xyz/chat/end";
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
