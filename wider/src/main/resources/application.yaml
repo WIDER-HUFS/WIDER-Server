@@ -1,4 +1,6 @@
 server:
+    port: 8080
+    address: 0.0.0.0
     servlet:
         # 한글깨짐 처리 
         encoding:
@@ -6,7 +8,7 @@ server:
     # error:
     #     whitelabel:
     #         enabled: false
-    #     path: /errors
+    #     path: /errors # 에러 페이지 경로
 
 # cloud:
 #     aws:
