@@ -18,19 +18,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private static final List<String> ALLOWED_ORIGINS = Arrays.asList(
-        "http://localhost:3000",
-        "https://hufswider.xyz"  // 실제 운영 도메인 추가
-    );
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .cors().and()
             .csrf().disable()
             .authorizeHttpRequests()
-            .requestMatchers("/api/users/signup", "/api/users/signin").permitAll()
-            .requestMatchers("/api/**").authenticated()
+            .requestMatchers("/api/**").permitAll()
             .anyRequest().authenticated();
         
         return http.build();
@@ -39,10 +33,9 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // configuration.setAllowedOrigins(ALLOWED_ORIGINS);
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // ★ 구체적으로 명시
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setExposedHeaders(Arrays.asList("Authorization"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
