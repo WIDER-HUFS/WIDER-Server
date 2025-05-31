@@ -1,8 +1,5 @@
 package ac.kr.hufs.wider.model.DAO.Impl;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +12,15 @@ public class BloomProgressStatsDaoImpl implements BloomProgressStatsDao{
     @Autowired
     private BloomProgressStatsRepository bloomProgressStatsRepository;
 
-    @Override
-    public List<BloomProgressStats> findByUserId(String userId) {
-        return bloomProgressStatsRepository.findByUser_UserId(userId);
-    }
+    // @Override
+    // public List<BloomProgressStats> findByUserId(String userId) {
+    //     return bloomProgressStatsRepository.findByUser_UserId(userId);
+    // }
 
-    @Override
-    public List<Map<String, Object>> findStats(int month) {
-        return bloomProgressStatsRepository.findMonthlyBloomLevelStats(month);
-    }
+    // @Override
+    // public List<Map<String, Object>> findStats(int month) {
+    //     return bloomProgressStatsRepository.findMonthlyBloomLevelStats(month);
+    // }
 
     @Override
     public BloomProgressStats save(BloomProgressStats stat) {
