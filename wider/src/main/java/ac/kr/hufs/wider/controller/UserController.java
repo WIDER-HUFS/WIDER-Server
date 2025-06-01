@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,11 +33,13 @@ public class UserController {
     private JwtService jwtService;
 
     @PostMapping("/signup")
+    @CrossOrigin(origins = "*")
     public Users signup(@RequestBody SignUpDTO signUpDTO) {
         return userService.createUser(signUpDTO);
     }
 
     @PostMapping("/signin")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<?> signin(@RequestBody SignInDTO signInDTO) {
         Users user = userService.signin(signInDTO.getUserId(), signInDTO.getPassword())
                 .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다."));
@@ -52,6 +55,7 @@ public class UserController {
 
 
     @GetMapping("/{userId}/info")
+    @CrossOrigin(origins = "*")
     public Users getUserInfo(@PathVariable String userId) {
         return userService.getUserById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
@@ -59,12 +63,14 @@ public class UserController {
 
 
     @PostMapping("/deleteUser")
+    @CrossOrigin(origins = "*")
     public String deleteUser(@RequestBody SignInDTO signInDTO) {
         userService.deleteUser(signInDTO.getUserId());
         return "삭제 완료";
     }
 
     @PostMapping("/logout")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
         // @RequestHeader("Authorization") String token : 헤더에서 토큰을 가져옴 (Bearer 토큰 형식)
         // 클라이언트에서 토큰을 삭제하는 코드 별도로 필요
