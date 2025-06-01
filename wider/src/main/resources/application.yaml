@@ -92,4 +92,5 @@ logging:
         ac.kr.hufs.wider: DEBUG
         org.springframework.web: DEBUG
         org.springframework.web.client.RestTemplate: DEBUG
+        org.springframework.security: DEBUG
     
