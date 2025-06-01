@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -29,6 +30,7 @@ public class ChatController {
     private RestTemplate restTemplate;
 
     @PostMapping("/start")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<?> startChat(
         @RequestHeader("Authorization") String token,
         @RequestBody StartChatRequestDTO request
@@ -63,6 +65,7 @@ public class ChatController {
 
 
     @PostMapping("/respond")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<?> respondToQuestion(
         @RequestHeader("Authorization") String token,
         @RequestBody UserResponseRequestDTO request
@@ -94,6 +97,7 @@ public class ChatController {
     }
 
     @PostMapping("/end")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<?> endChat(
         @RequestHeader("Authorization") String token,
         @RequestBody EndChatRequestDTO request

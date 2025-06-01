@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +27,7 @@ public class StatisticsController {
       * @return 사용자별 월별·레벨별 Bloom 단계 건수 리스트
       */
     @GetMapping("/histogram")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<List<MonthlyBloomLevelCountDTO>> getHistogram(
             @AuthenticationPrincipal Users currentUser) {
 
@@ -35,6 +37,7 @@ public class StatisticsController {
     }
 
     @GetMapping("/histogram/test")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<List<MonthlyBloomLevelCountDTO>> getHistogramTest(
             @RequestParam String userId) {
         return ResponseEntity.ok(service.getMonthlyHistogram(userId));

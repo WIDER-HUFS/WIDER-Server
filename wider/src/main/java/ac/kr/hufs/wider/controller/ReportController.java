@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +28,7 @@ public class ReportController {
     private RestTemplate restTemplate;
 
     @PostMapping("/generate/{sessionId}")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<?> generateReport(
         @PathVariable String sessionId,
         @RequestHeader("Authorization") String token
