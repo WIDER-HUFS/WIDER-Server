@@ -78,9 +78,28 @@ public class UserController {
         return ResponseEntity.ok().body("로그아웃 되었습니다.");
     }
 
-    @PostMapping("/changePassword")
-    public String changePassword(@RequestHeader("Authorization") String token, @RequestBody ChangePasswordDTO changePasswordDTO){
-        userService.changePassword(token, changePasswordDTO.getCurrentPassword(), changePasswordDTO.getNewPassword1(), changePasswordDTO.getNewPassword2());
-        return "비밀번호 변경 완료";
+   @PostMapping("/changePassword")
+public String changePassword(
+        @RequestHeader("Authorization") String authHeader, 
+        @RequestBody ChangePasswordDTO changePasswordDTO) {
+
+    // 1) 헤더가 "Bearer "로 시작하는지 확인
+    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        throw new IllegalArgumentException("Authorization 헤더 형식이 잘못되었습니다. 'Bearer {토큰}' 형태인지 확인하세요.");
     }
+
+    // 2) "Bearer " 접두어(7글자) 제거 → 실제 JWT만 남김
+    String token = authHeader.substring(7);
+
+    // 3) Service에 순수 토큰만 넘겨서 검증하도록
+    userService.changePassword(
+        token, 
+        changePasswordDTO.getCurrentPassword(), 
+        changePasswordDTO.getNewPassword1(), 
+        changePasswordDTO.getNewPassword2()
+    );
+
+    return "비밀번호 변경 완료";
+}
+
 }
