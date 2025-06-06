@@ -24,7 +24,6 @@ CATEGORY_URLS = {
     "정치": "https://news.naver.com/section/100",
     "경제": "https://news.naver.com/section/101",
     "사회": "https://news.naver.com/section/102",
-    "IT/과학": "https://news.naver.com/section/105",
     "세계": "https://news.naver.com/section/104"
 }
 
@@ -81,30 +80,30 @@ def extract_topic_from_articles(articles) -> dict:
     prompt = ChatPromptTemplate.from_messages(
         [
             ("system", """
-    당신은 뉴스 기사의 핵심 내용을 분석하여, **구체적이고 명확한 주제**와 **사고를 유도하는 질문**을 추출하는 역할을 맡고 있습니다.
+        당신은 뉴스 기사의 핵심 내용을 분석하여 **구체적이고 명확한 주제**와 **사고를 유도하는 질문**을 추출합니다.
 
-    당신이 해야 할 일은 다음과 같습니다:
+        해야 할 일:
+            1. 기사 내용을 읽고 **핵심 사건이나 문제**를 한 문장으로 요약.
+            2. 요약을 바탕으로 **주제를 두세 단어의 명사 또는 명사구**로 표현:
+                - 사회적 맥락에서 일반화 가능, 논의 여지 있는 주제.
+                - 지명이나 기관명 제외.
+                    - ex) 아프리카 기후 중심 경제 전환 -> 기후 중심 경제 전환
+            3. **정치적 민감성**이 있다면 정당명/인명 제외, **정책 수준**이나 **사회적 현상**으로 표현.
+            4. 주제 기반 **사고 유도 질문** 작성:
+                - 사실 확인이 아닌 **의견/해석 요구**
+                - **사회적 파급력/원인** 탐구.
+            5. 결과는 아래 JSON 형식으로만 반환, 설명 제외.
 
-    1. 기사 내용을 꼼꼼히 읽고, **핵심 사건이나 문제**를 한 문장으로 요약합니다.
-    2. 이 요약을 바탕으로 **주제를 두세 단어로 표현**하세요. 주제는 반드시 **명사 또는 명사구**여야 하며, 다음 조건을 반드시 지켜야 합니다:
-        - '사회', '현상', '문제', '이슈', '사건', '범죄', '정치' 등 **너무 일반적이거나 포괄적인 단어는 절대 사용하지 마세요.**
-        - 대신, **구체적인 행위자(예: '청소년 흡연', '노인 복지')**, **정책명 또는 제도명**, **사회적 논란이 되는 특정 이슈(예: '전기차 보조금 축소')**를 사용하세요.
-    3. 만약 기사에 **정치적 민감성**이 있다면, **정당명이나 인명**은 사용하지 말고 **정책 수준**이나 **사회적 현상**으로 일반화하여 표현하세요.
-    4. 추출된 주제를 기반으로, **사용자의 사고를 유도하는 질문**을 하나 작성하세요. 질문은 다음 기준을 따르세요:
-        - 고등학생 이상 일반 독자가 쉽게 이해할 수 있도록 하세요.
-        - 단순한 사실 확인이 아닌, **의견과 해석을 요구하는 방식**으로 작성하세요.
-    5. 결과는 반드시 아래 JSON 형식으로 반환하세요. 그 외의 문장이나 설명은 절대 포함하지 마세요.
-
-    예시 출력 형식:
-    {{
-    "topic": "청소년 흡연",
-    "topic_prompt": "왜 청소년들은 흡연을 시작하게 될까요? 사회가 이를 막기 위해 할 수 있는 일은 무엇일까요?"
-    }}
-    """),
-            ("user", """
-    기사 제목: {title}
-    기사 내용: {content}
-    """)
+        예시 출력 형식:
+        {{
+        "topic": "은행의 수익 구조",
+        "topic_prompt": "이자 이익 중심의 은행의 수익 구조가 왜 문제가 될까요?"
+        }}
+        """),
+    ("user", """
+        기사 제목: {title}
+        기사 내용: {content}
+        """)
         ]
     )
 
@@ -115,9 +114,62 @@ def extract_topic_from_articles(articles) -> dict:
 
     return topic_json # dict
 
-# 메인 실행 함수
+def evaluate_article_suitability(articles) -> tuple:
+    """
+    LLM을 사용하여 기사들의 논의 적합성을 평가하고 가장 적합한 기사를 선택합니다.
+    """
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", """
+        당신은 뉴스 기사의 논의 적합성을 평가하는 전문가입니다.
+        다음 기준에 따라 각 기사를 평가해주세요:
+
+        1. 사회적 영향력
+           - 넓은 사회적 파급력이 있는가?
+           - 많은 사람들에게 영향을 미치는가?
+
+        2. 논의 가치
+           - 다양한 관점에서 논의할 수 있는가?
+           - 명확한 찬반 의견이 있을 수 있는가?
+
+        3. 심도
+           - 단순한 사실 전달이 아닌 심층적인 분석이 있는가?
+           - 사회적 맥락에서 의미 있는 통찰을 제공하는가?
+
+        4. 시의성
+           - 현재 사회적 이슈와 연관이 있는가?
+           - 지속적인 논의가 필요한 주제인가?
+
+        각 기사에 대해 1-10점 사이로 점수를 매기고, 가장 높은 점수를 받은 기사의 인덱스를 반환해주세요.
+        점수는 JSON 형식으로 반환해주세요.
+
+        예시 출력:
+        {{
+            "scores": [8, 5, 7],
+            "best_index": 0,
+            "reason": "첫 번째 기사는 기본소득이라는 중요한 사회적 이슈를 다루며, 다양한 관점에서 논의할 수 있는 주제입니다."
+        }}
+        """),
+        ("user", """
+        평가할 기사들:
+        {articles}
+        """)
+    ])
+
+    # 기사 정보를 문자열로 변환
+    articles_text = "\n\n".join([
+        f"기사 {i+1}:\n제목: {title}\n내용: {content[:1000]}..." 
+        for i, (title, content) in enumerate(articles)
+    ])
+
+    llm = ChatOpenAI(model="gpt-4o-mini", openai_api_key=openai_api_key)
+    parser = JsonOutputParser()
+    chain = prompt | llm | parser
+    
+    evaluation = chain.invoke({"articles": articles_text})
+    return evaluation
+
 def main():
-    max_retries = 3  # 최대 재시도 횟수
+    max_retries = 3
     retry_count = 0
     
     while retry_count < max_retries:
@@ -127,54 +179,38 @@ def main():
         links = get_headline_links(CATEGORY_URLS[category])
         print(f"헤드라인 기사 {len(links)}개 수집됨")
 
-        random.shuffle(links)
         articles = []
-        min_length = 500  # 최소 길이 조건 완화
+        min_length = 1000
         
-        # 첫 번째 기사는 무조건 수집
+        # 모든 기사 수집
         for link in links:
             title, content = get_article_content(link)
             if content and len(content) >= min_length:
-                print("\n[선택된 뉴스 기사]")
-                print(f"제목: {title}")
-                print(f"링크: {link}\n")
-                print("[본문 내용]")
-                print(content)
-                articles.append((title, content))
-                break
-            else:
-                print(f"건너뜀 (길이 부족): {link}")
-            time.sleep(1)
-        
-        # 추가 기사 수집 (articles에 기사가 없는 경우 대비하여)
-        for link in links:
-            if len(articles) >= 3:  # 최대 3개까지만 수집
-                break
-            title, content = get_article_content(link)
-            if content and len(content) >= 1000:  # 추가 기사는 원래 조건 유지
-                print("\n[추가 기사]")
+                print(f"\n[수집된 기사]")
                 print(f"제목: {title}")
                 print(f"링크: {link}\n")
                 articles.append((title, content))
             time.sleep(1)
         
-        if articles:  # 기사가 수집된 경우
-            # 주제 추출
-            random.shuffle(articles)
-            topics = extract_topic_from_articles([articles[0]])
+        if len(articles) >= 3:  # 최소 3개의 기사가 수집된 경우
+            # 기사 적합성 평가
+            evaluation = evaluate_article_suitability(articles)
+            best_index = evaluation["best_index"]
+            print(f"\n[선정된 기사]")
+            print(f"제목: {articles[best_index][0]}")
+            print(f"선정 이유: {evaluation['reason']}")
+            
+            # 선정된 기사로 주제 추출
+            topics = extract_topic_from_articles([articles[best_index]])
             print(f"추출된 주제: {topics}")
             return topics
         else:
             retry_count += 1
-            print(f"기사 수집 실패. 재시도 {retry_count}/{max_retries}")
-            time.sleep(2)  # 재시도 전 잠시 대기
+            print(f"충분한 기사를 수집하지 못했습니다. 재시도 {retry_count}/{max_retries}")
+            time.sleep(2)
     
-    # 모든 재시도가 실패한 경우
-    # print("모든 재시도가 실패했습니다. 기본 주제로 진행합니다.")
-    # articles = [("기본소득", "기본소득에 대한 기사 내용입니다.")]
-    # topics = extract_topic_from_articles(articles)
-    print(f"추출된 주제: {topics}")
-    return topics
+    print("모든 재시도가 실패했습니다.")
+    return None
 
 # 실행
 if __name__ == "__main__":

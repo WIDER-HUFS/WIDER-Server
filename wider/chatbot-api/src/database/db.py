@@ -5,6 +5,9 @@ import json
 from typing import Dict, Any, Optional
 from datetime import date
 import uuid
+import logging
+
+logger = logging.getLogger(__name__)
 
 @contextmanager
 def get_db():
@@ -29,17 +32,22 @@ def create_session(session_id: str, topic: str, user_id: str):
         conn.commit()
 
 def mark_session_completed(session_id: str):
-    with get_db() as conn:
-        cursor = conn.cursor()
-        cursor.execute(
-            """
-            UPDATE session_logs
-            SET completed = 1, completed_at = NOW()
-            WHERE session_id = %s
-            """,
-            (session_id,)
-        )
-        conn.commit()
+    """세션을 완료 상태로 표시합니다."""
+    try:
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                UPDATE session_logs
+                SET completed = 1, completed_at = NOW()
+                WHERE session_id = %s
+                """,
+                (session_id,)
+            )
+            conn.commit()
+    except Exception as e:
+        logger.error(f"Error marking session as completed: {str(e)}")
+        raise
 
 def get_current_question(session_id: str) -> Optional[Dict[str, Any]]:
     with get_db() as conn:
@@ -81,16 +89,15 @@ def mark_answered(session_id: str, bloom_level: int, user_answer: str):
         conn.commit()
 
 def get_daily_topic() -> Optional[Dict[str, Any]]:
-    today = str(date.today())
     with get_db() as conn:
         cursor = conn.cursor(dictionary=True)
         cursor.execute(
             """
             SELECT topic, topic_prompt
             FROM daily_topic
-            WHERE topic_date = %s
-            """,
-            (today,)
+            ORDER BY topic_date DESC
+            LIMIT 1
+            """
         )
         return cursor.fetchone()
 
@@ -200,4 +207,37 @@ def get_saved_report(session_id: str) -> Optional[Dict[str, Any]]:
                 "revised_suggestion": result[8],
                 "created_at": result[9].isoformat()
             }
-        return None 
+        return None
+
+def get_active_sessions():
+    """완료되지 않은 활성 세션 목록을 가져옵니다."""
+    try:
+        with get_db() as conn:
+            with conn.cursor(dictionary=True) as cursor:
+                cursor.execute("""
+                    SELECT DISTINCT s.session_id, s.topic, s.created_at
+                    FROM session_logs s
+                    WHERE s.completed = 0
+                    ORDER BY s.created_at DESC
+                """)
+                return cursor.fetchall()
+    except Exception as e:
+        logger.error(f"Error getting active sessions: {str(e)}")
+        return []
+
+def get_session_questions(session_id: str):
+    """특정 세션의 모든 질문과 답변을 가져옵니다."""
+    try:
+        with get_db() as conn:
+            with conn.cursor(dictionary=True) as cursor:
+                cursor.execute("""
+                    SELECT session_id, bloom_level, topic, question, 
+                           user_answer, is_answered, created_at
+                    FROM questions
+                    WHERE session_id = %s
+                    ORDER BY bloom_level ASC, created_at ASC
+                """, (session_id,))
+                return cursor.fetchall()
+    except Exception as e:
+        logger.error(f"Error getting session questions: {str(e)}")
+        return [] 

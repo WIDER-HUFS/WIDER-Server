@@ -1,5 +1,7 @@
 package ac.kr.hufs.wider.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -7,6 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -20,6 +23,8 @@ import ac.kr.hufs.wider.model.DTO.EndChatResponseDTO;
 import ac.kr.hufs.wider.model.DTO.StartChatRequestDTO;
 import ac.kr.hufs.wider.model.DTO.StartChatResponseDTO;
 import ac.kr.hufs.wider.model.DTO.UserResponseRequestDTO;
+import ac.kr.hufs.wider.model.Entity.DailyTopic;
+import ac.kr.hufs.wider.model.Service.TopicService;
 
 
 @RestController
@@ -28,6 +33,20 @@ public class ChatController {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private TopicService topicService;
+
+
+    @GetMapping("/topic")
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<?> getTopic(
+        @RequestHeader("Authorization") String token
+    ) {
+        Optional<DailyTopic> topic = topicService.getTodayTopic();
+        return ResponseEntity.ok(topic.get().getTopic());
+    }
+
 
     @PostMapping("/start")
     @CrossOrigin(origins = "*")

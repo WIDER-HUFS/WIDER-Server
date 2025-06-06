@@ -27,10 +27,11 @@ async def process_response(
     user_id: str = Depends(verify_token)
 ) -> ChatResponse:
     return await process_response_service(
-        request.session_id,
-        request.user_answer,
-        request.current_level,
-        request.topic
+        session_id=request.session_id,
+        user_answer=request.user_answer,
+        current_level=request.current_level,
+        topic=request.topic,
+        user_id=user_id
     )
 
 @router.post("/end")
