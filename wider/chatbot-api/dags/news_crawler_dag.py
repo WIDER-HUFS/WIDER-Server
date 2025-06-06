@@ -27,7 +27,7 @@ local_tz = timezone("Asia/Seoul")
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2025, 5, 10, tzinfo=local_tz),
+    'start_date': datetime(2025, 5, 10),
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
@@ -75,7 +75,7 @@ with DAG(
     'news_crawler_dag',
     default_args=default_args,
     description='Daily news crawling and topic extraction',
-    schedule='0 0 * * *',  # Run daily at midnight
+    schedule='0 15 * * *',  # Run daily at 15:00 UTC (midnight KST)
     catchup=False
 ) as dag:
 
