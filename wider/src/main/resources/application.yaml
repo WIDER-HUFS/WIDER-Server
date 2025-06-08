@@ -93,4 +93,8 @@ logging:
         org.springframework.web: DEBUG
         org.springframework.web.client.RestTemplate: DEBUG
         org.springframework.security: DEBUG
+
+chatbot:
+    api:
+        url: http://127.0.0.1:8000
     
