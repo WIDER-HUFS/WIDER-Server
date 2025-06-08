@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 
 class StartChatRequest(BaseModel):
     topic: Optional[str] = None
@@ -23,4 +23,22 @@ class ChatResponse(BaseModel):
 
 class ReportResponse(BaseModel):
     session_id: str
-    report: Dict[str, Any] 
+    report: Dict[str, Any]
+
+class ChatSession(BaseModel):
+    session_id: str
+    topic: str
+    started_at: str
+    completed: bool
+    completed_at: Optional[str]
+    message_count: int
+
+class ConversationMessage(BaseModel):
+    speaker: str
+    content: str
+    timestamp: str
+    message_order: int
+
+class ConversationHistory(BaseModel):
+    session_id: str
+    messages: List[ConversationMessage] 

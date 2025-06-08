@@ -13,7 +13,8 @@ from database.db import (
     mark_answered,
     get_daily_topic,
     mark_session_completed,
-    get_session_summary
+    get_session_summary,
+    save_conversation_history
 )
 from services.report import generate_report_for_session
 from prompts.question import question_prompt
@@ -111,12 +112,17 @@ async def start_chat_service(topic: str = None, user_id: str = None) -> ChatResp
         # 6. 질문 저장
         save_question(session_id, topic, question, 1)
         
+        # 7. 대화 기록 저장
+        welcome_message = f"안녕하세요! 오늘의 주제는 '{topic}'입니다. 첫 번째 질문을 드리겠습니다."
+        save_conversation_history(session_id, "AI", welcome_message)
+        save_conversation_history(session_id, "AI", question)
+        
         return ChatResponse(
             session_id=session_id,
             topic=topic,
             current_level=1,
             question=question,
-            message=f"안녕하세요! 오늘의 주제는 '{topic}'입니다. 첫 번째 질문을 드리겠습니다.",
+            message=welcome_message,
             is_complete=False
         )
     except HTTPException:
@@ -156,140 +162,81 @@ async def process_response_service(
             {"output": user_answer}
         )
         
-        # 4. 응답 평가
-        try:
-            eval_response = eval_chain.invoke({
-                "question": current_question["question"],
-                "bloom_level": current_question["bloom_level"],
-                "user_answer": user_answer
-            }).content
-            
-            try:
-                evaluation = json.loads(eval_response)
-            except json.JSONDecodeError as e:
-                logger.error(f"Invalid JSON response from eval_chain: {eval_response}")
-                # 기본 평가 결과 반환
-                evaluation = {
-                    "is_appropriate": False,
-                    "feedback": "응답을 평가하는 데 문제가 발생했습니다. 다시 시도해주세요.",
-                    "is_looking_for_help": False,
-                    "hint": "이 주제에 대해 더 깊이 생각해볼 수 있을까요?"
-                }
-            
-            # 필수 필드 확인 및 기본값 설정
-            required_fields = {
-                "is_appropriate": False,
-                "feedback": "응답을 평가하는 데 문제가 발생했습니다.",
-                "is_looking_for_help": False,
-                "hint": "이 주제에 대해 더 깊이 생각해볼 수 있을까요?"
-            }
-            
-            for field, default_value in required_fields.items():
-                if field not in evaluation or evaluation[field] is None:
-                    logger.warning(f"Missing or null field '{field}' in evaluation, using default value")
-                    evaluation[field] = default_value
-            
-            logger.info(f"Response evaluation completed for session {session_id}")
-        except Exception as e:
-            logger.error(f"Error evaluating response: {str(e)}")
-            # 기본 평가 결과 반환
-            evaluation = {
-                "is_appropriate": False,
-                "feedback": "응답을 평가하는 데 문제가 발생했습니다. 다시 시도해주세요.",
-                "is_looking_for_help": False,
-                "hint": "이 주제에 대해 더 깊이 생각해볼 수 있을까요?"
-            }
+        # 4. 사용자 응답 저장
+        mark_answered(session_id, current_level, user_answer)
         
-        # 5. 응답이 적절한 경우에만 answered로 마크
-        if evaluation["is_appropriate"]:
-            mark_answered(
-                session_id,
-                current_question["bloom_level"],
-                user_answer
-            )
-            logger.info(f"Marked answer as appropriate for session {session_id}")
+        # 5. 대화 기록 저장
+        save_conversation_history(session_id, "Human", user_answer)
+        
+        # 6. 다음 단계 결정
+        next_level = current_level + 1
+        
+        if next_level > 6:
+            # 세션 종료
+            mark_session_completed(session_id)
             
-            # 6. 다음 단계 결정
-            next_level = current_question["bloom_level"] + 1
+            # 리포트 생성
+            report = await generate_report_for_session(session_id, user_id)
             
-            if next_level <= 6:
-                # 다음 단계로 진행
-                chat_history = format_chat_history(memory)
-                
-                try:
-                    next_question = question_chain.invoke({
-                        "topic": topic,
-                        "bloom_level": next_level,
-                        "chat_history": chat_history
-                    }).content
-                    logger.info(f"Generated next question for level {next_level}")
-                except Exception as e:
-                    logger.error(f"Error generating next question: {str(e)}")
-                    raise HTTPException(
-                        status_code=500,
-                        detail="다음 질문 생성 중 오류가 발생했습니다."
-                    )
-                
-                # 새 질문을 메모리에 저장
-                memory.save_context(
-                    {"input": f"다음 단계({next_level}) 질문 생성"},
-                    {"output": next_question}
-                )
-                
-                save_question(
-                    session_id,
-                    topic,
-                    next_question,
-                    next_level
-                )
-                
-                return ChatResponse(
-                    session_id=session_id,
-                    topic=topic,
-                    current_level=next_level,
-                    question=next_question,
-                    message="좋은 답변입니다! 다음 단계로 넘어가겠습니다.",
-                    is_complete=False
-                )
-            else:
-                # 모든 단계 완료
-                mark_session_completed(session_id)
-                if session_id in session_memories:
-                    del session_memories[session_id]
-                logger.info(f"Session {session_id} completed all levels")
-                
-                # 6단계 완료 시 바로 리포트 생성
-                try:
-                    await generate_report_for_session(session_id, user_id)
-                    logger.info(f"Generated report for completed session {session_id}")
-                except Exception as e:
-                    logger.error(f"Error generating report: {str(e)}")
-                
-                return ChatResponse(
-                    session_id=session_id,
-                    topic=topic,
-                    current_level=6,
-                    question=None,
-                    message="모든 단계를 완료하셨습니다! 수고하셨습니다.",
-                    is_complete=True
-                )
-        else:
-            # 힌트 제공 또는 추가 유도
-            message = (
-                evaluation["hint"]
-                if evaluation["is_looking_for_help"]
-                else f"조금 더 생각해볼까요? {evaluation['feedback']}"
-            )
+            # 세션 메모리 정리
+            if session_id in session_memories:
+                del session_memories[session_id]
+            
+            # 대화 기록 저장
+            save_conversation_history(session_id, "AI", "오늘의 학습을 마치겠습니다. 수고하셨습니다!")
             
             return ChatResponse(
                 session_id=session_id,
                 topic=topic,
                 current_level=current_level,
-                question=current_question["question"],
-                message=message,
-                is_complete=False
+                message="오늘의 학습을 마치겠습니다. 수고하셨습니다!",
+                is_complete=True
+            )
+        
+        if next_level <= 6:
+            # 다음 단계로 진행
+            chat_history = format_chat_history(memory)
+            
+            try:
+                next_question = question_chain.invoke({
+                    "topic": topic,
+                    "bloom_level": next_level,
+                    "chat_history": chat_history
+                }).content
+                logger.info(f"Generated next question for level {next_level}")
+            except Exception as e:
+                logger.error(f"Error generating next question: {str(e)}")
+                raise HTTPException(
+                    status_code=500,
+                    detail="다음 질문 생성 중 오류가 발생했습니다."
+                )
+            
+            # 새 질문을 메모리에 저장
+            memory.save_context(
+                {"input": f"다음 단계({next_level}) 질문 생성"},
+                {"output": next_question}
             )
             
+            save_question(
+                session_id,
+                topic,
+                next_question,
+                next_level
+            )
+            
+            # 대화 기록 저장
+            save_conversation_history(session_id, "AI", "좋은 답변입니다! 다음 단계로 넘어가겠습니다.")
+            save_conversation_history(session_id, "AI", next_question)
+            
+            return ChatResponse(
+                session_id=session_id,
+                topic=topic,
+                current_level=next_level,
+                question=next_question,
+                message="좋은 답변입니다! 다음 단계로 넘어가겠습니다.",
+                is_complete=False
+            )
+
     except Exception as e:
         logger.error(f"Error in process_response_service: {str(e)}")
         raise HTTPException(
