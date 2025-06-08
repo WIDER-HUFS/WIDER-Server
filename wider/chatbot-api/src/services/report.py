@@ -33,16 +33,13 @@ async def generate_report_service(session_id: str, user_id: str) -> dict:
     try:
         logger.info(f"Generating report for session {session_id}, user {user_id}")
         
-        # 1. 세션 데이터 조회
-        session_data = get_session_summary(session_id)
-        if not session_data:
-            logger.error(f"No session data found for session {session_id}")
-            raise HTTPException(
-                status_code=404,
-                detail="세션을 찾을 수 없습니다."
-            )
-        
-        # 2. 세션의 주제 조회
+        # 1. 세션의 모든 질문과 답변 가져오기
+        questions = get_session_questions(session_id)
+        if not questions:
+            logger.error(f"No questions found for session {session_id}")
+            raise HTTPException(status_code=404, detail="세션을 찾을 수 없습니다.")
+
+        # 2. 세션 주제 가져오기
         topic = get_session_topic(session_id)
         if not topic:
             logger.error(f"No topic found for session {session_id}")
@@ -53,11 +50,11 @@ async def generate_report_service(session_id: str, user_id: str) -> dict:
         
         # 3. 리포트 생성
         try:
-        report = json.loads(
-            report_chain.invoke({
-                "conversation_data": json.dumps(session_data, ensure_ascii=False)
-            }).content
-        )
+            report = json.loads(
+                report_chain.invoke({
+                    "conversation_data": json.dumps(session_data, ensure_ascii=False)
+                }).content
+            )
             logger.info(f"Generated report content for session {session_id}")
         except Exception as e:
             logger.error(f"Error generating report content: {str(e)}")
@@ -68,7 +65,7 @@ async def generate_report_service(session_id: str, user_id: str) -> dict:
         
         # 4. 리포트 저장
         try:
-        report_id = save_report(session_id, user_id, topic, report)
+            report_id = save_report(session_id, user_id, topic, report)
             logger.info(f"Saved report {report_id} for session {session_id}")
         except Exception as e:
             logger.error(f"Error saving report: {str(e)}")
@@ -95,54 +92,54 @@ async def get_report_service(session_id: str) -> dict:
     try:
         logger.info(f"Retrieving report for session {session_id}")
         
-    report = get_saved_report(session_id)
-    if not report:
+        report = get_saved_report(session_id)
+        if not report:
             logger.error(f"No report found for session {session_id}")
-        raise HTTPException(
-            status_code=404,
-            detail="리포트를 찾을 수 없습니다."
-        )
-    
-    # 리포트를 텍스트 형식으로 변환
+            raise HTTPException(
+                status_code=404,
+                detail="리포트를 찾을 수 없습니다."
+            )
+        
+        # 리포트를 텍스트 형식으로 변환
         try:
-    formatted_report = f"""📊 학습 리포트
+            formatted_report = f"""📊 학습 리포트
 
 📝 요약
 {report['summary']}
 
 💪 강점
 """
-    
-    # 강점 추가
-    for strength in report['strengths']:
-        formatted_report += f"""
+            
+            # 강점 추가
+            for strength in report['strengths']:
+                formatted_report += f"""
 • {strength['title']}
   - {strength['description']}
   - 예시: {strength['example']}
 """
-    
-    formatted_report += "\n🔍 개선점"
-    # 개선점 추가
-    for weakness in report['weaknesses']:
-        formatted_report += f"""
+            
+            formatted_report += "\n🔍 개선점"
+            # 개선점 추가
+            for weakness in report['weaknesses']:
+                formatted_report += f"""
 • {weakness['title']}
   - {weakness['description']}
   - 제안: {weakness['suggestion']}
 """
-    
-    formatted_report += "\n💡 제안사항"
-    # 제안사항 추가
-    for suggestion in report['suggestions']:
-        formatted_report += f"""
+            
+            formatted_report += "\n💡 제안사항"
+            # 제안사항 추가
+            for suggestion in report['suggestions']:
+                formatted_report += f"""
 • {suggestion['title']}
   - {suggestion['description']}
   - 추천 자료: {suggestion['resources']}
   - 생각해볼 질문:
 """
-        for question in suggestion['questions']:
-            formatted_report += f"    - {question}\n"
-    
-    formatted_report += f"""
+                for question in suggestion['questions']:
+                    formatted_report += f"    - {question}\n"
+            
+            formatted_report += f"""
 ✨ 발전된 응답 예시
 {report['revised_suggestion']}
 
@@ -155,13 +152,13 @@ async def get_report_service(session_id: str) -> dict:
                 status_code=500,
                 detail="리포트 포맷팅 중 오류가 발생했습니다."
             )
-    
-    return {
-        "session_id": session_id,
-        "topic": report['topic'],
-        "formatted_report": formatted_report,
-        "raw_data": report  # 원본 데이터도 함께 반환
-    } 
+        
+        return {
+            "session_id": session_id,
+            "topic": report['topic'],
+            "formatted_report": formatted_report,
+            "raw_data": report  # 원본 데이터도 함께 반환
+        }
     except HTTPException:
         raise
     except Exception as e:

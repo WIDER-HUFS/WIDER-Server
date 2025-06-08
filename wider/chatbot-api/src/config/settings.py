@@ -8,7 +8,8 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # JWT 설정
-JWT_SECRET = os.getenv("JWT_SECRET")
+JWT_SECRET_KEY = os.getenv("JWT_SECRET")
+JWT_ALGORITHM = "HS256"
 
 # MySQL 설정
 MYSQL_CONFIG = {

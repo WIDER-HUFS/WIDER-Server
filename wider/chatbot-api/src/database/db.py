@@ -2,7 +2,7 @@ import mysql.connector
 from contextlib import contextmanager
 from config.settings import MYSQL_CONFIG
 import json
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from datetime import date
 import uuid
 import logging
@@ -34,17 +34,17 @@ def create_session(session_id: str, topic: str, user_id: str):
 def mark_session_completed(session_id: str):
     """세션을 완료 상태로 표시합니다."""
     try:
-    with get_db() as conn:
-        cursor = conn.cursor()
-        cursor.execute(
-            """
-            UPDATE session_logs
-            SET completed = 1, completed_at = NOW()
-            WHERE session_id = %s
-            """,
-            (session_id,)
-        )
-        conn.commit()
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                UPDATE session_logs
+                SET completed = 1, completed_at = NOW()
+                WHERE session_id = %s
+                """,
+                (session_id,)
+            )
+            conn.commit()
     except Exception as e:
         logger.error(f"Error marking session as completed: {str(e)}")
         raise
@@ -241,3 +241,33 @@ def get_session_questions(session_id: str):
     except Exception as e:
         logger.error(f"Error getting session questions: {str(e)}")
         return [] 
+
+def save_conversation_history(session_id: str, message: str, is_user: bool):
+    """대화 기록을 저장합니다."""
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            INSERT INTO conversation_history (
+                session_id, message, is_user, created_at
+            )
+            VALUES (%s, %s, %s, NOW())
+            """,
+            (session_id, message, is_user)
+        )
+        conn.commit()
+
+def get_conversation_history(session_id: str) -> List[Dict[str, Any]]:
+    """세션의 대화 기록을 조회합니다."""
+    with get_db() as conn:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(
+            """
+            SELECT message, is_user, created_at
+            FROM conversation_history
+            WHERE session_id = %s
+            ORDER BY created_at ASC
+            """,
+            (session_id,)
+        )
+        return cursor.fetchall() 
