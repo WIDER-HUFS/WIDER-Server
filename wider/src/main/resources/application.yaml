@@ -93,8 +93,15 @@ logging:
         org.springframework.web: DEBUG
         org.springframework.web.client.RestTemplate: DEBUG
         org.springframework.security: DEBUG
+<<<<<<< HEAD
 
 chatbot:
     api:
         url: http://127.0.0.1:8000
+=======
+    
+chatbot:
+    api:
+        url: http://localhost:8000  # Replace this with your actual chatbot API URL
+>>>>>>> origin/main
     
