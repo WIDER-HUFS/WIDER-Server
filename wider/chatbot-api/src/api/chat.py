@@ -15,6 +15,7 @@ from models.schemas import (
 )
 from database.db import get_conversation_history
 from typing import List
+import logging
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
@@ -51,16 +52,23 @@ async def get_conversation_history_endpoint(
     user_id: str = Depends(verify_token)
 ) -> ConversationHistory:
     """특정 세션의 대화 기록을 가져옵니다."""
-    messages = get_conversation_history(session_id)
-    return ConversationHistory(
-        session_id=session_id,
-        messages=[
-            ConversationMessage(
-                speaker=msg["speaker"],
-                content=msg["content"],
-                timestamp=msg["timestamp"].isoformat(),
-                message_order=msg["message_order"]
-            )
-            for msg in messages
-        ]
-    ) 
+    try:
+        messages = get_conversation_history(session_id)
+        return ConversationHistory(
+            session_id=session_id,
+            messages=[
+                ConversationMessage(
+                    speaker=msg["speaker"],
+                    content=msg["content"],
+                    timestamp=msg["timestamp"].isoformat(),
+                    message_order=msg.get("message_order", 0)  # message_order가 없으면 0으로 기본값 설정
+                )
+                for msg in messages
+            ]
+        )
+    except Exception as e:
+        logger.error(f"Error getting conversation history: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"대화 기록을 가져오는 중 오류가 발생했습니다: {str(e)}"
+        ) 

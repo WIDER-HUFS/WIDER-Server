@@ -8,7 +8,9 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # JWT 설정
-JWT_SECRET = os.getenv("JWT_SECRET")
+JWT_SECRET_KEY = "yourSecretKeyShouldBeLongAndSecureAndStoredInEnvironmentVariables"  # 실제 운영 환경에서는 환경 변수로 관리해야 합니다
+JWT_ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 # MySQL 설정
 MYSQL_CONFIG = {
