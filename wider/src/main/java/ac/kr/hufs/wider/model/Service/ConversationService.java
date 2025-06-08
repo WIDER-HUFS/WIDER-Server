@@ -3,6 +3,7 @@ package ac.kr.hufs.wider.model.Service;
 import java.util.List;
 import java.util.Optional;
 
+import ac.kr.hufs.wider.model.DTO.ConversationHistoryDTO;
 import ac.kr.hufs.wider.model.Entity.ConversationHistory;
 import ac.kr.hufs.wider.model.Entity.ConversationId;
 
@@ -24,4 +25,6 @@ public interface ConversationService {
     
     // 세션의 모든 대화 기록 삭제
     void deleteConversationsBySessionId(String sessionId);
+
+    ConversationHistoryDTO getConversationHistory(String sessionId, String token);
 } 

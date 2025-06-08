@@ -34,17 +34,17 @@ def create_session(session_id: str, topic: str, user_id: str):
 def mark_session_completed(session_id: str):
     """세션을 완료 상태로 표시합니다."""
     try:
-        with get_db() as conn:
-            cursor = conn.cursor()
-            cursor.execute(
-                """
-                UPDATE session_logs
-                SET completed = 1, completed_at = NOW()
-                WHERE session_id = %s
-                """,
-                (session_id,)
-            )
-            conn.commit()
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            UPDATE session_logs
+            SET completed = 1, completed_at = NOW()
+            WHERE session_id = %s
+            """,
+            (session_id,)
+        )
+        conn.commit()
     except Exception as e:
         logger.error(f"Error marking session as completed: {str(e)}")
         raise
@@ -207,7 +207,7 @@ def get_saved_report(session_id: str) -> Optional[Dict[str, Any]]:
                 "revised_suggestion": result[8],
                 "created_at": result[9].isoformat()
             }
-        return None
+        return None 
 
 def get_active_sessions():
     """완료되지 않은 활성 세션 목록을 가져옵니다."""

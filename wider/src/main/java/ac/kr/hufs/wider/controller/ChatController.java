@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import ac.kr.hufs.wider.model.DTO.ChatResponseDTO;
+import ac.kr.hufs.wider.model.DTO.ConversationHistoryDTO;
 import ac.kr.hufs.wider.model.DTO.EndChatRequestDTO;
 import ac.kr.hufs.wider.model.DTO.EndChatResponseDTO;
 import ac.kr.hufs.wider.model.DTO.StartChatRequestDTO;
@@ -25,7 +27,6 @@ import ac.kr.hufs.wider.model.DTO.StartChatResponseDTO;
 import ac.kr.hufs.wider.model.DTO.UserResponseRequestDTO;
 import ac.kr.hufs.wider.model.Entity.DailyTopic;
 import ac.kr.hufs.wider.model.Service.TopicService;
-
 
 @RestController
 @RequestMapping("/api/chat")
@@ -37,7 +38,6 @@ public class ChatController {
     @Autowired
     private TopicService topicService;
 
-
     @GetMapping("/topic")
     @CrossOrigin(origins = "*")
     public ResponseEntity<?> getTopic(
@@ -46,7 +46,6 @@ public class ChatController {
         Optional<DailyTopic> topic = topicService.getTodayTopic();
         return ResponseEntity.ok(topic.get().getTopic());
     }
-
 
     @PostMapping("/start")
     @CrossOrigin(origins = "*")
@@ -81,7 +80,6 @@ public class ChatController {
                 .body("Failed to communicate with chat service: " + e.getMessage());
         }
     }
-
 
     @PostMapping("/respond")
     @CrossOrigin(origins = "*")
@@ -135,6 +133,40 @@ public class ChatController {
             requestEntity,
             EndChatResponseDTO.class
         );
+    }
+
+    @GetMapping("/history/{sessionId}")
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<?> getConversationHistory(
+        @PathVariable String sessionId,
+        @RequestHeader("Authorization") String token
+    ) {
+        String fastApiUrl = "http://127.0.0.1:8000/chat/history/" + sessionId;
+        // String fastApiUrl = "https://www.widerhufs.xyz/chat/history/" + sessionId;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<ConversationHistoryDTO> response = restTemplate.exchange(
+                fastApiUrl,
+                HttpMethod.GET,
+                requestEntity,
+                ConversationHistoryDTO.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                return ResponseEntity.ok(response.getBody());
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to get conversation history");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Failed to communicate with chat service: " + e.getMessage());
+        }
     }
 }
 //     @PostMapping
