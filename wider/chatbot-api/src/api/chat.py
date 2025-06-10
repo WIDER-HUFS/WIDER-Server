@@ -26,7 +26,7 @@ async def start_chat(
 ) -> ChatResponse:
     return await start_chat_service(request.topic, user_id)
 
-@router.post("/response")
+@router.post("/respond")
 async def process_response(
     request: UserResponseRequest,
     user_id: str = Depends(verify_token)
