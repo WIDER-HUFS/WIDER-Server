@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePassword(String token, String currentPassword, String newPassword1, String newPassword2) {
-        String userId = jwtService.extractUsername(token);
+        String userId = jwtService.extractUserId(token);
         Optional<Users> user = userDao.findById(userId);
         if (!passwordEncoder.matches(currentPassword, user.get().getPassword())) {
             throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");

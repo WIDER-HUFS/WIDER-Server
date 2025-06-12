@@ -64,16 +64,27 @@ def get_current_question(session_id: str) -> Optional[Dict[str, Any]]:
         return cursor.fetchone()
 
 def save_question(session_id: str, topic: str, question: str, bloom_level: int):
-    with get_db() as conn:
-        cursor = conn.cursor()
-        cursor.execute(
-            """
-            INSERT INTO questions (session_id, topic, question, bloom_level, is_answered)
-            VALUES (%s, %s, %s, %s, 0)
-            """,
-            (session_id, topic, question, bloom_level)
-        )
-        conn.commit()
+    """질문을 저장합니다. 이미 같은 세션의 같은 레벨 질문이 있다면 업데이트합니다."""
+    try:
+        with get_db() as conn:
+            cursor = conn.cursor()
+            
+            # UPSERT 쿼리 실행 (INSERT ... ON DUPLICATE KEY UPDATE)
+            cursor.execute(
+                """
+                INSERT INTO questions (session_id, topic, question, bloom_level, is_answered)
+                VALUES (%s, %s, %s, %s, 0)
+                ON DUPLICATE KEY UPDATE
+                    question = VALUES(question),
+                    is_answered = 0
+                """,
+                (session_id, topic, question, bloom_level)
+            )
+            
+            conn.commit()
+    except Exception as e:
+        logger.error(f"Error saving question: {str(e)}")
+        raise
 
 def mark_answered(session_id: str, bloom_level: int, user_answer: str):
     with get_db() as conn:
@@ -138,6 +149,10 @@ def save_report(session_id: str, user_id: str, topic: str, report: Dict[str, Any
     with get_db() as conn:
         cursor = conn.cursor()
         report_id = str(uuid.uuid4())
+        
+        # 리포트에서 Bloom 레벨 가져오기
+        bloom_level = report.get("level", 1)  # 기본값 1
+        
         cursor.execute(
             """
             INSERT INTO reports (
@@ -150,9 +165,10 @@ def save_report(session_id: str, user_id: str, topic: str, report: Dict[str, Any
                 weaknesses,
                 suggestions,
                 revised_suggestion,
+                bloom_level,
                 created_at
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())
             """,
             (
                 report_id,
@@ -163,7 +179,8 @@ def save_report(session_id: str, user_id: str, topic: str, report: Dict[str, Any
                 json.dumps(report["strengths"], ensure_ascii=False),
                 json.dumps(report["weaknesses"], ensure_ascii=False),
                 json.dumps(report["suggestions"], ensure_ascii=False),
-                report["revised_suggestion"]
+                report["revised_suggestion"],
+                bloom_level
             )
         )
         conn.commit()
@@ -184,6 +201,7 @@ def get_saved_report(session_id: str) -> Optional[Dict[str, Any]]:
                 weaknesses,
                 suggestions,
                 revised_suggestion,
+                bloom_level,
                 created_at
             FROM reports 
             WHERE session_id = %s
@@ -205,9 +223,10 @@ def get_saved_report(session_id: str) -> Optional[Dict[str, Any]]:
                 "weaknesses": json.loads(result[6]),
                 "suggestions": json.loads(result[7]),
                 "revised_suggestion": result[8],
-                "created_at": result[9].isoformat()
+                "bloom_level": result[9],
+                "created_at": result[10].isoformat()
             }
-        return None 
+        return None
 
 def get_active_sessions():
     """완료되지 않은 활성 세션 목록을 가져옵니다."""
@@ -296,3 +315,43 @@ def get_conversation_history(session_id: str) -> List[Dict[str, Any]]:
     except Exception as e:
         logger.error(f"Error getting conversation history: {str(e)}")
         raise 
+
+def get_session_info(session_id: str) -> Dict[str, Any]:
+    """세션의 기본 정보를 가져옵니다."""
+    try:
+        with get_db() as conn:
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute(
+                """
+                SELECT 
+                    topic,
+                    bloom_level as current_level,
+                    completed
+                FROM session_logs
+                WHERE session_id = %s
+                """,
+                (session_id,)
+            )
+            return cursor.fetchone()
+    except Exception as e:
+        logger.error(f"Error getting session info: {str(e)}")
+        raise 
+
+def get_session_max_bloom_level(session_id: str) -> int:
+    """세션의 최고 Bloom 레벨을 가져옵니다."""
+    try:
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                SELECT MAX(bloom_level)
+                FROM questions
+                WHERE session_id = %s
+                """,
+                (session_id,)
+            )
+            result = cursor.fetchone()
+            return result[0] if result and result[0] is not None else 1
+    except Exception as e:
+        logger.error(f"Error getting session max bloom level: {str(e)}")
+        return 1  # 에러 발생 시 기본값 1 반환 

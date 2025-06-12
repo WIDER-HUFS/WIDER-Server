@@ -3,7 +3,11 @@ package ac.kr.hufs.wider.model.Service;
 import java.util.List;
 import java.util.Optional;
 
+import ac.kr.hufs.wider.model.DTO.ChatResponseDTO;
 import ac.kr.hufs.wider.model.DTO.ConversationHistoryDTO;
+import ac.kr.hufs.wider.model.DTO.EndChatRequestDTO;
+import ac.kr.hufs.wider.model.DTO.StartChatRequestDTO;
+import ac.kr.hufs.wider.model.DTO.UserResponseRequestDTO;
 import ac.kr.hufs.wider.model.Entity.ConversationHistory;
 import ac.kr.hufs.wider.model.Entity.ConversationId;
 
@@ -27,4 +31,8 @@ public interface ConversationService {
     void deleteConversationsBySessionId(String sessionId);
 
     ConversationHistoryDTO getConversationHistory(String sessionId, String token);
+
+    ChatResponseDTO startChat(StartChatRequestDTO request, String token);
+    ChatResponseDTO respondToQuestion(UserResponseRequestDTO request, String token);
+    void endChat(EndChatRequestDTO request, String token);
 } 

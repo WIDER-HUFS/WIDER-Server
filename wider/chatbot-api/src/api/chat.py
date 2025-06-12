@@ -13,9 +13,12 @@ from models.schemas import (
     ConversationHistory,
     ConversationMessage
 )
-from database.db import get_conversation_history
+from database.db import get_conversation_history, get_session_info, get_session_max_bloom_level
 from typing import List
 import logging
+
+# 로거 설정
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
@@ -36,6 +39,7 @@ async def process_response(
         request.user_answer,
         request.current_level,
         request.topic,
+        request.topic_prompt,
         user_id
     )
 
@@ -53,15 +57,31 @@ async def get_conversation_history_endpoint(
 ) -> ConversationHistory:
     """특정 세션의 대화 기록을 가져옵니다."""
     try:
+        # 대화 기록 가져오기
         messages = get_conversation_history(session_id)
+        
+        # 세션 정보 가져오기
+        session_info = get_session_info(session_id)
+        if not session_info:
+            raise HTTPException(
+                status_code=404,
+                detail="세션을 찾을 수 없습니다."
+            )
+            
+        # 세션의 최고 Bloom 레벨 가져오기
+        max_bloom_level = get_session_max_bloom_level(session_id)
+            
         return ConversationHistory(
             session_id=session_id,
+            topic=session_info["topic"],
+            current_level=max_bloom_level,  # questions 테이블에서 조회한 최고 레벨 사용
+            is_complete=session_info["completed"],
             messages=[
                 ConversationMessage(
                     speaker=msg["speaker"],
                     content=msg["content"],
                     timestamp=msg["timestamp"].isoformat(),
-                    message_order=msg.get("message_order", 0)  # message_order가 없으면 0으로 기본값 설정
+                    message_order=msg.get("message_order", 0)
                 )
                 for msg in messages
             ]

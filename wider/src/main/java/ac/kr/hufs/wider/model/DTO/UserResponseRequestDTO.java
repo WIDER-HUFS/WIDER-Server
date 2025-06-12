@@ -18,4 +18,6 @@ public class UserResponseRequestDTO {
     private int currentLevel;
     @JsonProperty("topic")
     private String topic;
+    @JsonProperty("topic_prompt")
+    private String topicPrompt;
 }

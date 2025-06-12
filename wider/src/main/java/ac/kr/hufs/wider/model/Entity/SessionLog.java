@@ -1,6 +1,5 @@
 package ac.kr.hufs.wider.model.Entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
@@ -29,4 +28,5 @@ public class SessionLog {
     private LocalDateTime startedAt = LocalDateTime.now(); // 세션 시작 시간
     private boolean completed = false; // 대화 종료 여부
     private LocalDateTime completedAt; // 세션 종료된 시간
+    private String bloomLevel; // Bloom's Taxonomy level
 }

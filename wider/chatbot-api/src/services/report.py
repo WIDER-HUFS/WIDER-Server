@@ -53,12 +53,31 @@ async def generate_report_service(session_id: str, user_id: str) -> dict:
         
         # 3. 리포트 생성
         try:
-            report = json.loads(
-                report_chain.invoke({
-                    "conversation_data": json.dumps(session_data, ensure_ascii=False)
-                }).content
-            )
+            response = report_chain.invoke({
+                "conversation_data": json.dumps(session_data, ensure_ascii=False)
+            })
+            
+            # 응답 내용 로깅
+            logger.debug(f"Report chain response: {response.content}")
+            
+            # 응답이 비어있는지 확인
+            if not response.content or response.content.strip() == "":
+                raise ValueError("Empty response from report chain")
+                
+            report = json.loads(response.content)
             logger.info(f"Generated report content for session {session_id}")
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid JSON response from report chain: {str(e)}")
+            raise HTTPException(
+                status_code=500,
+                detail="리포트 생성 중 잘못된 응답이 반환되었습니다."
+            )
+        except ValueError as e:
+            logger.error(f"Invalid response from report chain: {str(e)}")
+            raise HTTPException(
+                status_code=500,
+                detail="리포트 생성 중 오류가 발생했습니다."
+            )
         except Exception as e:
             logger.error(f"Error generating report content: {str(e)}")
             raise HTTPException(

@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class JwtService {
     private final SecretKey secretKey;
 
@@ -28,27 +30,27 @@ public class JwtService {
 
     private String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
-                .setClaims(claims) // 추가 정보 설정
-                .setSubject(subject) // 사용자 ID 설정
-                .setIssuedAt(new Date(System.currentTimeMillis())) // 토큰 발급 시간
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10시간
-                .signWith(secretKey, SignatureAlgorithm.HS256) // HS256 알고리즘으로 서명
-                .compact(); // JWT 문자열 생성
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String extractUserId(String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        return extractClaim(token, Claims::getSubject);
     }
 
     public Boolean validateToken(String token, String userId) {
         if (token.startsWith("Bearer ")) {
             token = token.substring(7);
         }
-        final String username = extractUsername(token);
-        return (username.equals(userId) && !isTokenExpired(token));
-    }
-
-    public String extractUsername(String token) {
-        if (token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
-        return extractClaim(token, Claims::getSubject);
+        final String extractedUserId = extractUserId(token);
+        return (extractedUserId.equals(userId) && !isTokenExpired(token));
     }
 
     public Date extractExpiration(String token) {

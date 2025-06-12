@@ -20,6 +20,7 @@ from services.report import generate_report_for_session
 from prompts.question import question_prompt
 from prompts.evaluation import eval_prompt
 from models.schemas import ChatResponse
+from .evaluation import evaluate_response
 
 # 로거 설정
 logger = logging.getLogger(__name__)
@@ -89,11 +90,12 @@ async def start_chat_service(topic: str = None, user_id: str = None) -> ChatResp
         
         # 4. 첫 번째 질문 생성
         try:
+            topic_prompt = daily_topic["topic_prompt"]  # ✅ 추가
             question = question_chain.invoke({
                 "topic": topic,
                 "bloom_level": 1,
                 "chat_history": "",
-                "question": ""
+                "topic_prompt": topic_prompt  # ✅ 추가
             }).content
             logger.info(f"Generated first question for session {session_id}")
         except Exception as e:
@@ -139,6 +141,7 @@ async def process_response_service(
     user_answer: str,
     current_level: int,
     topic: str,
+    topic_prompt: str,
     user_id: str
 ) -> ChatResponse:
     try:
@@ -153,22 +156,54 @@ async def process_response_service(
                 detail="진행 중인 질문을 찾을 수 없습니다."
             )
         
-        # 2. 세션 메모리 가져오기
+        # 2. 사용자 응답 평가
+        evaluation = evaluate_response(
+            question=current_question["question"],
+            bloom_level=current_level,
+            user_answer=user_answer
+        )
+        
+        # 3. 세션 메모리 가져오기
         memory = get_session_memory(session_id)
         
-        # 3. 사용자 응답을 메모리에 저장
+        # 4. 사용자 응답을 메모리에 저장
         memory.save_context(
             {"input": current_question["question"]},
             {"output": user_answer}
         )
         
-        # 4. 사용자 응답 저장
+        # 5. 사용자 응답 저장
         mark_answered(session_id, current_level, user_answer)
         
-        # 5. 대화 기록 저장
+        # 6. 대화 기록 저장
         save_conversation_history(session_id, "Human", user_answer)
         
-        # 6. 다음 단계 결정
+        # 7. 응답이 부적절한 경우
+        if not evaluation["is_appropriate"]:
+            # 피드백과 힌트를 포함한 메시지 생성
+            feedback_message = f"{evaluation['feedback']}\n\n힌트: {evaluation['hint']}"
+            
+            # 대화 기록에 피드백 저장
+            save_conversation_history(session_id, "AI", feedback_message)
+            
+            # 같은 질문을 다시 저장하여 다음 응답에서도 사용할 수 있도록 함
+            save_question(
+                session_id,
+                topic,
+                current_question["question"],
+                current_level
+            )
+            
+            return ChatResponse(
+                session_id=session_id,
+                topic=topic,
+                current_level=current_level,
+                question=current_question["question"],
+                message=feedback_message,
+                is_complete=False
+            )
+        
+        # 8. 다음 단계 결정
         next_level = current_level + 1
         
         if next_level > 6:
@@ -200,6 +235,7 @@ async def process_response_service(
             try:
                 next_question = question_chain.invoke({
                     "topic": topic,
+                    "topic_prompt": topic_prompt,
                     "bloom_level": next_level,
                     "chat_history": chat_history
                 }).content

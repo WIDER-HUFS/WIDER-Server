@@ -26,6 +26,11 @@ public class SessionLogDaoImpl implements SessionLogDao{
     }
 
     @Override
+    public List<SessionLog> findLatestSessionsByUserId(String userId) {
+        return sessionLogRepository.findLatestSessionsByUserId(userId);
+    }
+
+    @Override
     public SessionLog save(SessionLog log) {
         return sessionLogRepository.save(log);
     }

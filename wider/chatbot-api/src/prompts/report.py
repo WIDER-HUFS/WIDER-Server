@@ -9,6 +9,7 @@ report_prompt = ChatPromptTemplate.from_messages([
         
         다음 JSON 형식으로 리포트를 작성해주세요:
         {{
+            "level": "학습자가 도달한 레벨 (1 ~ 6 사이의 정수)",
             "summary": "대화의 핵심 내용을 300자 이내로 간결하게 요약",
             "strengths": [
                 {{

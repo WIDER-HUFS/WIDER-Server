@@ -1,8 +1,6 @@
 package ac.kr.hufs.wider.model.Service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,27 +14,37 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import ac.kr.hufs.wider.model.DAO.ConversationHistoryDao;
+import ac.kr.hufs.wider.model.DTO.ChatResponseDTO;
 import ac.kr.hufs.wider.model.DTO.ConversationHistoryDTO;
-import ac.kr.hufs.wider.model.DTO.ConversationMessageDTO;
+import ac.kr.hufs.wider.model.DTO.EndChatRequestDTO;
+import ac.kr.hufs.wider.model.DTO.StartChatRequestDTO;
+import ac.kr.hufs.wider.model.DTO.UserResponseRequestDTO;
 import ac.kr.hufs.wider.model.Entity.ConversationHistory;
 import ac.kr.hufs.wider.model.Entity.ConversationId;
 import ac.kr.hufs.wider.model.Service.ConversationService;
+import ac.kr.hufs.wider.service.JwtService;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
+@Slf4j
 public class ConversationServiceImpl implements ConversationService {
 
     private final ConversationHistoryDao conversationHistoryDao;
-
-    @Value("${chatbot.api.url}")
-    private String chatbotApiUrl;
-
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
+    private final JwtService jwtService;
+    private final String chatbotApiUrl;
 
     @Autowired
-    public ConversationServiceImpl(ConversationHistoryDao conversationHistoryDao) {
+    public ConversationServiceImpl(
+            ConversationHistoryDao conversationHistoryDao,
+            RestTemplate restTemplate,
+            JwtService jwtService,
+            @Value("${chatbot.api.url}") String chatbotApiUrl) {
         this.conversationHistoryDao = conversationHistoryDao;
+        this.restTemplate = restTemplate;
+        this.jwtService = jwtService;
+        this.chatbotApiUrl = chatbotApiUrl;
     }
 
     @Override
@@ -74,45 +82,104 @@ public class ConversationServiceImpl implements ConversationService {
     }
 
     @Override
-    public ConversationHistoryDTO getConversationHistory(String sessionId, String token) {
+    public ChatResponseDTO startChat(StartChatRequestDTO request, String token) {
+        String fastApiUrl = chatbotApiUrl + "/chat/start";
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+
+        HttpEntity<StartChatRequestDTO> requestEntity = new HttpEntity<>(request, headers);
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer " + token);
-            
-            HttpEntity<?> entity = new HttpEntity<>(headers);
-            
-            ResponseEntity<Map> response = restTemplate.exchange(
-                chatbotApiUrl + "/chat/history/" + sessionId,
-                HttpMethod.GET,
-                entity,
-                Map.class
+            ResponseEntity<ChatResponseDTO> response = restTemplate.exchange(
+                fastApiUrl,
+                HttpMethod.POST,
+                requestEntity,
+                ChatResponseDTO.class
             );
-            
-            Map<String, Object> responseBody = response.getBody();
-            if (responseBody == null) {
+
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                return response.getBody();
+            } else {
+                throw new RuntimeException("Failed to start chat");
+            }
+        } catch (Exception e) {
+            log.error("Error starting chat: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to start chat: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public ChatResponseDTO respondToQuestion(UserResponseRequestDTO request, String token) {
+        String fastApiUrl = chatbotApiUrl + "/chat/respond";
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+
+        HttpEntity<UserResponseRequestDTO> requestEntity = new HttpEntity<>(request, headers);
+        try {
+            ResponseEntity<ChatResponseDTO> response = restTemplate.exchange(
+                fastApiUrl,
+                HttpMethod.POST,
+                requestEntity,
+                ChatResponseDTO.class
+            );
+
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                return response.getBody();
+            } else {
+                throw new RuntimeException("Failed to process response");
+            }
+        } catch (Exception e) {
+            log.error("Error processing response: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to process response: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public ConversationHistoryDTO getConversationHistory(String sessionId, String token) {
+        String fastApiUrl = String.format("%s/chat/history/%s", chatbotApiUrl, sessionId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+
+        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+        try {
+            ResponseEntity<ConversationHistoryDTO> response = restTemplate.exchange(
+                fastApiUrl,
+                HttpMethod.GET,
+                requestEntity,
+                ConversationHistoryDTO.class
+            );
+
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                return response.getBody();
+            } else {
                 throw new RuntimeException("Failed to get conversation history");
             }
-            
-            ConversationHistoryDTO history = new ConversationHistoryDTO();
-            history.setSessionId((String) responseBody.get("session_id"));
-            
-            List<Map<String, Object>> messages = (List<Map<String, Object>>) responseBody.get("messages");
-            List<ConversationMessageDTO> messageDTOs = new ArrayList<>();
-            
-            for (Map<String, Object> message : messages) {
-                ConversationMessageDTO messageDTO = new ConversationMessageDTO();
-                messageDTO.setSpeaker((String) message.get("speaker"));
-                messageDTO.setContent((String) message.get("content"));
-                messageDTO.setTimestamp((String) message.get("timestamp"));
-                messageDTO.setMessageOrder(((Number) message.get("message_order")).intValue());
-                messageDTOs.add(messageDTO);
-            }
-            
-            history.setMessages(messageDTOs);
-            return history;
-            
         } catch (Exception e) {
-            throw new RuntimeException("Failed to get conversation history: " + e.getMessage(), e);
+            log.error("Error getting conversation history: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to get conversation history: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void endChat(EndChatRequestDTO request, String token) {
+        String fastApiUrl = chatbotApiUrl + "/chat/end";
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+
+        HttpEntity<EndChatRequestDTO> requestEntity = new HttpEntity<>(request, headers);
+        try {
+            ResponseEntity<Void> response = restTemplate.exchange(
+                fastApiUrl,
+                HttpMethod.POST,
+                requestEntity,
+                Void.class
+            );
+
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                throw new RuntimeException("Failed to end chat");
+            }
+        } catch (Exception e) {
+            log.error("Error ending chat: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to end chat: " + e.getMessage());
         }
     }
 } 

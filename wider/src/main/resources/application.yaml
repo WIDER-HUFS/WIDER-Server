@@ -96,5 +96,5 @@ logging:
     
 chatbot:
     api:
-        url: http://localhost:8000  # Replace this with your actual chatbot API URL
+        url: http://localhost:8000
     

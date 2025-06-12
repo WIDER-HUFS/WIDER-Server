@@ -8,6 +8,7 @@ import ac.kr.hufs.wider.model.Entity.SessionLog;
 public interface SessionLogDao {
     Optional<SessionLog> findById(String sessionId);
     List<SessionLog> findByUserId(String userId);
+    List<SessionLog> findLatestSessionsByUserId(String userId);
     SessionLog save(SessionLog log);
     void deleteById(String sessionId);
     void deleteAll(List<SessionLog> sessions);

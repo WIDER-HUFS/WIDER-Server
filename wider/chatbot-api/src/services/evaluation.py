@@ -85,12 +85,19 @@ def evaluate_response(question: str, bloom_level: int, user_answer: str) -> dict
             "user_answer": user_answer
         }).content
         
+        # 마크다운 코드 블록 제거
+        if response.startswith("```json"):
+            response = response[7:]  # ```json 제거
+        if response.endswith("```"):
+            response = response[:-3]  # ``` 제거
+        response = response.strip()
+        
         # Pydantic 모델을 사용하여 응답 검증 및 변환
         evaluation = EvaluationResponse.model_validate_json(response)
         return evaluation.model_dump()
         
     except Exception as e:
-        print(f"Error in evaluation: {str(e)}")
+        logger.error(f"Error in evaluation: {str(e)}")
         # 에러 발생 시 기본 응답 반환
         default_response = EvaluationResponse(
             is_appropriate=False,

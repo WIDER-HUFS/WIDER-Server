@@ -9,6 +9,7 @@ class UserResponseRequest(BaseModel):
     user_answer: str
     current_level: int
     topic: str
+    topic_prompt: str
 
 class EndChatRequest(BaseModel):
     session_id: str
@@ -41,4 +42,7 @@ class ConversationMessage(BaseModel):
 
 class ConversationHistory(BaseModel):
     session_id: str
+    topic: str
+    current_level: int
+    is_complete: bool
     messages: List[ConversationMessage] 
