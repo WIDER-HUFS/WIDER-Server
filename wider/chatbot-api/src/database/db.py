@@ -63,25 +63,21 @@ def get_current_question(session_id: str) -> Optional[Dict[str, Any]]:
         )
         return cursor.fetchone()
 
-def save_question(session_id: str, topic: str, question: str, bloom_level: int):
-    """질문을 저장합니다. 이미 같은 세션의 같은 레벨 질문이 있다면 업데이트합니다."""
+def save_question(session_id: str, topic: str, question: str, bloom_level: int) -> None:
+    """질문을 저장합니다."""
     try:
-        with get_db() as conn:
-            cursor = conn.cursor()
-            
-            # UPSERT 쿼리 실행 (INSERT ... ON DUPLICATE KEY UPDATE)
-            cursor.execute(
-                """
-                INSERT INTO questions (session_id, topic, question, bloom_level, is_answered)
-                VALUES (%s, %s, %s, %s, 0)
-                ON DUPLICATE KEY UPDATE
-                    question = VALUES(question),
-                    is_answered = 0
-                """,
-                (session_id, topic, question, bloom_level)
-            )
-            
-            conn.commit()
+        conn = get_db()
+        cursor = conn.cursor()
+        
+        # 질문 저장
+        cursor.execute("""
+            INSERT INTO questions (session_id, topic, question, bloom_level)
+            VALUES (%s, %s, %s, %s)
+        """, (session_id, topic, question, bloom_level))
+        
+        conn.commit()
+        cursor.close()
+        conn.close()
     except Exception as e:
         logger.error(f"Error saving question: {str(e)}")
         raise
@@ -234,10 +230,10 @@ def get_active_sessions():
         with get_db() as conn:
             with conn.cursor(dictionary=True) as cursor:
                 cursor.execute("""
-                    SELECT DISTINCT s.session_id, s.topic, s.created_at
+                    SELECT DISTINCT s.session_id, s.topic, s.started_at
                     FROM session_logs s
                     WHERE s.completed = 0
-                    ORDER BY s.created_at DESC
+                    ORDER BY s.started_at DESC
                 """)
                 return cursor.fetchall()
     except Exception as e:
@@ -264,6 +260,7 @@ def get_session_questions(session_id: str):
 def save_conversation_history(session_id: str, speaker: str, content: str):
     """대화 기록을 저장합니다."""
     try:
+        logger.info(f"Saving conversation history - session_id: {session_id}, speaker: {speaker}")
         with get_db() as conn:
             cursor = conn.cursor()
             
@@ -277,6 +274,7 @@ def save_conversation_history(session_id: str, speaker: str, content: str):
                 (session_id,)
             )
             next_order = cursor.fetchone()[0]
+            logger.info(f"Next message order: {next_order}")
             
             # 새 메시지 저장
             cursor.execute(
@@ -289,8 +287,9 @@ def save_conversation_history(session_id: str, speaker: str, content: str):
                 (session_id, speaker, content, next_order)
             )
             conn.commit()
+            logger.info(f"Successfully saved message with order {next_order}")
     except Exception as e:
-        logger.error(f"Error saving conversation history: {str(e)}")
+        logger.error(f"Error saving conversation history: {str(e)}", exc_info=True)
         raise
 
 def get_conversation_history(session_id: str) -> List[Dict[str, Any]]:
@@ -355,3 +354,23 @@ def get_session_max_bloom_level(session_id: str) -> int:
     except Exception as e:
         logger.error(f"Error getting session max bloom level: {str(e)}")
         return 1  # 에러 발생 시 기본값 1 반환 
+
+def get_user_active_session(user_id: str, topic: str) -> Optional[Dict[str, Any]]:
+    """사용자의 특정 주제에 대한 활성 세션을 가져옵니다."""
+    try:
+        with get_db() as conn:
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute(
+                """
+                SELECT session_id, topic, bloom_level, completed, started_at
+                FROM session_logs
+                WHERE user_id = %s AND topic = %s AND completed = 0
+                ORDER BY started_at DESC
+                LIMIT 1
+                """,
+                (user_id, topic)
+            )
+            return cursor.fetchone()
+    except Exception as e:
+        logger.error(f"Error getting user active session: {str(e)}")
+        return None 

@@ -61,7 +61,7 @@ public class RecordController {
     public ResponseEntity<?> getSession(
             @PathVariable String sessionId,
             @RequestHeader("Authorization") String token) {
-        String fastApiUrl = String.format("%s/chat/history/%s", chatbotApiUrl, sessionId);
+        String fastApiUrl = String.format("http://127.0.0.1:8000/chat/history/%s", sessionId);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
 

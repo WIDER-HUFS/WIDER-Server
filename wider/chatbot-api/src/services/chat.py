@@ -14,7 +14,8 @@ from database.db import (
     get_daily_topic,
     mark_session_completed,
     get_session_summary,
-    save_conversation_history
+    save_conversation_history,
+    get_user_active_session
 )
 from services.report import generate_report_for_session
 from prompts.question import question_prompt
@@ -79,16 +80,36 @@ async def start_chat_service(topic: str = None, user_id: str = None) -> ChatResp
         topic = topic or daily_topic["topic"]
         logger.info(f"Selected topic: {topic}")
         
-        # 2. 세션 생성
+        # 2. 사용자의 기존 활성 세션 확인
+        if user_id:
+            existing_session = get_user_active_session(user_id, topic)
+            if existing_session:
+                logger.info(f"Found existing session: {existing_session['session_id']}")
+                # 기존 세션의 메모리 가져오기
+                memory = get_session_memory(existing_session['session_id'])
+                
+                # 현재 질문 가져오기
+                current_question = get_current_question(existing_session['session_id'])
+                if current_question:
+                    return ChatResponse(
+                        session_id=existing_session['session_id'],
+                        topic=topic,
+                        current_level=existing_session['bloom_level']+1,
+                        question=current_question['question'],
+                        message=f"이전 대화를 이어서 진행합니다.",
+                        is_complete=False
+                    )
+        
+        # 3. 새 세션 생성 (기존 세션이 없거나 완료된 경우)
         session_id = str(uuid.uuid4())
         create_session(session_id, topic, user_id)
         logger.info(f"Created new session: {session_id}")
         
-        # 3. 세션 메모리 초기화
+        # 4. 세션 메모리 초기화
         memory = get_session_memory(session_id)
         memory.clear()
         
-        # 4. 첫 번째 질문 생성
+        # 5. 첫 번째 질문 생성
         try:
             topic_prompt = daily_topic["topic_prompt"]  # ✅ 추가
             question = question_chain.invoke({

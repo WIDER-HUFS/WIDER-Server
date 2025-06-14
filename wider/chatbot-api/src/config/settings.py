@@ -19,3 +19,5 @@ MYSQL_CONFIG = {
     'password': os.getenv("MYSQL_PASSWORD"),
     'database': os.getenv("MYSQL_DATABASE")
 } 
+
+print(MYSQL_CONFIG)

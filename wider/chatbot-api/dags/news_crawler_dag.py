@@ -4,17 +4,14 @@ from airflow.operators.python import PythonOperator
 import sys
 import os
 import pymysql
-from dotenv import load_dotenv
 from pendulum import timezone
 
 # Add the project root directory to the Python path
 current_dir = os.path.dirname(os.path.abspath(__file__))
+print(f"Current directory: {current_dir}")
 project_root = os.path.dirname(current_dir)  # chatbot-api directory
-sys.path.append(project_root)
 print(f"Project root: {project_root}")
-
-load_dotenv()
-
+sys.path.append(project_root)
 
 # Debug: Print environment variables (remove in production)
 print(f"MySQL Host: {os.getenv('MYSQL_HOST')}")
