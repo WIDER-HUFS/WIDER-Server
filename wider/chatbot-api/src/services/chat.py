@@ -94,7 +94,7 @@ async def start_chat_service(topic: str = None, user_id: str = None) -> ChatResp
                     return ChatResponse(
                         session_id=existing_session['session_id'],
                         topic=topic,
-                        current_level=existing_session['bloom_level']+1,
+                        current_level=existing_session['bloom_level'],
                         question=current_question['question'],
                         message=f"이전 대화를 이어서 진행합니다.",
                         is_complete=False

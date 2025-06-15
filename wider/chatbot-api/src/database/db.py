@@ -69,10 +69,16 @@ def save_question(session_id: str, topic: str, question: str, bloom_level: int) 
         with get_db() as conn:
             cursor = conn.cursor()
             
-            # 질문 저장
+            # 기존의 미답변 질문 삭제
             cursor.execute("""
-                INSERT INTO questions (session_id, topic, question, bloom_level)
-                VALUES (%s, %s, %s, %s)
+                DELETE FROM questions 
+                WHERE session_id = %s AND is_answered = 0
+            """, (session_id,))
+            
+            # 새로운 질문 저장
+            cursor.execute("""
+                INSERT INTO questions (session_id, topic, question, bloom_level, is_answered)
+                VALUES (%s, %s, %s, %s, 0)
             """, (session_id, topic, question, bloom_level))
             
             conn.commit()
