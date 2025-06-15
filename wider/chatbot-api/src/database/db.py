@@ -66,18 +66,16 @@ def get_current_question(session_id: str) -> Optional[Dict[str, Any]]:
 def save_question(session_id: str, topic: str, question: str, bloom_level: int) -> None:
     """질문을 저장합니다."""
     try:
-        conn = get_db()
-        cursor = conn.cursor()
-        
-        # 질문 저장
-        cursor.execute("""
-            INSERT INTO questions (session_id, topic, question, bloom_level)
-            VALUES (%s, %s, %s, %s)
-        """, (session_id, topic, question, bloom_level))
-        
-        conn.commit()
-        cursor.close()
-        conn.close()
+        with get_db() as conn:
+            cursor = conn.cursor()
+            
+            # 질문 저장
+            cursor.execute("""
+                INSERT INTO questions (session_id, topic, question, bloom_level)
+                VALUES (%s, %s, %s, %s)
+            """, (session_id, topic, question, bloom_level))
+            
+            conn.commit()
     except Exception as e:
         logger.error(f"Error saving question: {str(e)}")
         raise
