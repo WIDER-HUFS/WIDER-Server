@@ -69,19 +69,39 @@ def save_question(session_id: str, topic: str, question: str, bloom_level: int) 
         with get_db() as conn:
             cursor = conn.cursor()
             
-            # 기존의 미답변 질문 삭제
-            cursor.execute("""
-                DELETE FROM questions 
-                WHERE session_id = %s AND is_answered = 0
-            """, (session_id,))
+            # 트랜잭션 시작
+            conn.start_transaction()
             
-            # 새로운 질문 저장
-            cursor.execute("""
-                INSERT INTO questions (session_id, topic, question, bloom_level, is_answered)
-                VALUES (%s, %s, %s, %s, 0)
-            """, (session_id, topic, question, bloom_level))
-            
-            conn.commit()
+            try:
+                # 먼저 해당 질문이 존재하는지 확인
+                cursor.execute("""
+                    SELECT 1 FROM questions 
+                    WHERE session_id = %s AND bloom_level = %s
+                """, (session_id, bloom_level))
+                
+                exists = cursor.fetchone() is not None
+                
+                if exists:
+                    # 존재하면 업데이트
+                    cursor.execute("""
+                        UPDATE questions 
+                        SET topic = %s, question = %s, is_answered = 0
+                        WHERE session_id = %s AND bloom_level = %s
+                    """, (topic, question, session_id, bloom_level))
+                else:
+                    # 존재하지 않으면 삽입
+                    cursor.execute("""
+                        INSERT INTO questions (session_id, topic, question, bloom_level, is_answered)
+                        VALUES (%s, %s, %s, %s, 0)
+                    """, (session_id, topic, question, bloom_level))
+                
+                # 트랜잭션 커밋
+                conn.commit()
+            except Exception as e:
+                # 오류 발생 시 롤백
+                conn.rollback()
+                raise e
+                
     except Exception as e:
         logger.error(f"Error saving question: {str(e)}")
         raise
